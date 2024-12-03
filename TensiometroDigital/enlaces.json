@@ -1,0 +1,60 @@
+{
+    "links": [
+        {
+            "name": "Arial.ttf",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/Arial.ttf"
+        },
+        {
+            "name": "ArialBold.ttf",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/ArialBold.ttf"
+        },
+        {
+            "name": "Drive.py",
+            "url": "https://raw.githubusercontent.com/Sony998/AutoCertification/refs/heads/main/Drive.py"
+        },
+        {
+            "name": "Google.py",
+            "url": "https://raw.githubusercontent.com/Sony998/AutoCertification/refs/heads/main/PULIR/Tensiometros/Google.py"
+        },
+        {
+            "name": "backqr.png",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/backqr.png"
+        },
+        {
+            "name": "Fraunces.ttf",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/Fraunces.ttf"
+        },
+        {
+            "name": "marcaDeAgua.png",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/marcaDeAgua.png"
+        },
+        {
+            "name": "GraficaError.py",
+            "url": "https://raw.githubusercontent.com/Sony998/AutoCertification/refs/heads/main/PULIR/Tensiometros/GenerarGraficaError.py"
+        },
+        {
+            "name": "GraficaDesviacion.py",
+            "url": "https://raw.githubusercontent.com/Sony998/AutoCertification/refs/heads/main/PULIR/Tensiometros/GenerarGraficaDesviacion.py"
+        },
+        {
+            "name": "backCertificado.png",
+            "url": "https://github.com/Sony998/AutoCertification/blob/b4c50ee49e7f5afc6facc06eef7e176ae6f0b1fb/PULIR/Tensiometros/backCertificado.png"
+        },
+        {
+            "name": "genqr.py",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/PULIR/Tensiometros/genqr.py"
+        },
+        {
+            "name": "putImages.py",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/PULIR/Tensiometros/putImages.py"
+        },
+        {
+            "name": "unirpdf.py",
+            "url": "https://github.com/Sony998/AutoCertification/blob/main/PULIR/Tensiometros/unirpdf.py"
+        },
+        {
+            "name": "GenerarCertificado.py",
+            "url": "https://raw.githubusercontent.com/Sony998/AutoCertification/refs/heads/main/PULIR/Tensiometros/GenerarCertificado.py"
+        }
+    ]
+}
