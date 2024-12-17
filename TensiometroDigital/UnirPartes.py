@@ -1,7 +1,7 @@
 import os
 import PyPDF2
 
-folders = ["OUTPUT/Certificados","OUTPUT/Reportes/1", "OUTPUT/Reportes/2", "OUTPUT/Reportes/3", "OUTPUT/Reportes/4"]
+folders = ["OUTPUT/Certificados","OUTPUT/Reportes/1", "OUTPUT/Reportes/2", "OUTPUT/Reportes/3", "OUTPUT/Reportes/4", "OUTPUT/Reportes/5","OUTPUT/Reportes/6","OUTPUT/Reportes/7"]
 
 merger = PyPDF2.PdfMerger()
 

@@ -7,7 +7,7 @@ import os
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 import pandas as pd
-archivo_excel = '/home/raven/Tensiometros.xlsx'   
+archivo_excel = '/home/raven/TensiometrosSantana.xlsx'   
 df = pd.read_excel(archivo_excel, sheet_name='TENSIOMETRO DIGITAL', header=None)
 fila_actual = 0
 certificados= []
@@ -25,7 +25,7 @@ datos_sistolica_list = []
 incertidumbres_list = []
 notas = []
 fecha = df.iat[4, 10]
-ciudad = df.iat[5,10]
+ciudad = df.iat[3,10]
 metrologo = df.iat[10,10]
 errorsistolica_directory = "OUTPUT/Graficos/Error/Sistolica"
 errordiastolica_directory = "OUTPUT/Graficos/Error/Diastolica"
@@ -83,7 +83,7 @@ while True:
     fdepulso_list.append(fdepulso) """
 
 def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado):
-    print("Generando pagina 1 para",nombrecertificado)
+    print("Generando paginas para",nombrecertificado)
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -94,15 +94,16 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado):
     c.setFont("Baskerville", 14)
     c.drawString(302, 660, nombrecertificado)
     c.setFont("Arial", 16)
-    c.drawString(340, 222, fecha)
-    c.drawString(340, 192, fecha)
-    c.drawString(340, 162, ciudad)
-    c.drawString(340, 130, metrologo)
+    c.drawString(310, 222, fecha)
+    c.drawString(310, 192, fecha)
+    c.drawString(310, 162, ciudad)
+    c.drawString(310, 130, metrologo)
     c.save()
 
 """     """
 
 def agregar_imagenes_pdf2(fondo_path, output_pdf_path, sistolica, diastolica, frecuencia ):
+    print("Generando pagina 2" )
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -111,11 +112,11 @@ def agregar_imagenes_pdf2(fondo_path, output_pdf_path, sistolica, diastolica, fr
     pdfmetrics.registerFont(TTFont('ArialI', 'Formatos/Fuentes/ArialI.ttf'))
     c.setFont("ArialI", 14)
     c.setFont("Arial", 13)
-    c.drawString(360, 625, "22.5")
-    c.drawString(455, 625, "26.8")
-    c.drawString(385, 605, "1012")
-    c.drawString(360, 585, "59")
-    c.drawString(455, 585, "68") 
+    c.drawString(360, 625, "24")
+    c.drawString(455, 625, "26")
+    c.drawString(385, 605, "1011")
+    c.drawString(360, 585, "45")
+    c.drawString(455, 585, "56") 
     for i in range(3):
         c.drawString(180 + i * 115, 124 , "{:.2f}".format(float(sistolica.iloc[i])))
         c.drawString(180 + i * 115, 104 , "{:.2f}".format(float(diastolica.iloc[i])))
@@ -124,6 +125,7 @@ def agregar_imagenes_pdf2(fondo_path, output_pdf_path, sistolica, diastolica, fr
     c.save()
 
 def generar_pagina_3(fondo_path, output_pdf_path, tabla_sistolica, tabla_diastolica, tabla_frecuencia):
+    print("Generando pagina 3" )
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -179,6 +181,7 @@ def generar_pagina_3(fondo_path, output_pdf_path, tabla_sistolica, tabla_diastol
     c.save() """
 
 def agregar_imagenes_pdf4(img_fondo_path, img_superior_path1, img_superior_path2, output_pdf_path, yinferior, ysuperior):
+    print("Generando pagina 4" )
     img_fondo = Image.open(img_fondo_path).convert("RGBA")
     image_superior = Image.open(img_superior_path1).convert("RGBA")
     image_inferior = Image.open(img_superior_path2).convert("RGBA")
@@ -199,6 +202,7 @@ def agregar_imagenes_pdf4(img_fondo_path, img_superior_path1, img_superior_path2
     c.save()
 
 def agregar_imagenes_pdf5(img_fondo_path, img_superior_path1, img_superior_path2, output_pdf_path, yinferior, ysuperior):
+    print("Generando pagina 5" )
     img_fondo = Image.open(img_fondo_path).convert("RGBA")
     image_superior = Image.open(img_superior_path1).convert("RGBA")
     image_inferior = Image.open(img_superior_path2).convert("RGBA")
@@ -218,6 +222,7 @@ def agregar_imagenes_pdf5(img_fondo_path, img_superior_path1, img_superior_path2
     c.setFont("Arial", 11)
     c.save()
 def agregar_imagenes_pdf6(img_fondo_path, img_superior_path1, img_superior_path2, output_pdf_path, yinferior, ysuperior):
+    print("Generando pagina 6" )
     img_fondo = Image.open(img_fondo_path).convert("RGBA")
     image_superior = Image.open(img_superior_path1).convert("RGBA")
     image_inferior = Image.open(img_superior_path2).convert("RGBA")
@@ -238,6 +243,7 @@ def agregar_imagenes_pdf6(img_fondo_path, img_superior_path1, img_superior_path2
     c.save()
     
 def agregar_imagenes_pdf7(fondo_path, output_pdf_path, nota):
+    print("Generando pagina 7" )
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')

@@ -26,17 +26,11 @@ def start_generation():
         ruta_excel = selected_file_path
         drive_name = entry_drive_folder.get()
         tipo_equipo = selected_var.get()
-
         os.chdir(tipo_equipo)
         print(os.getcwd())
         print(ruta_excel, drive_name, tipo_equipo)
-        command = f"python3 main.py --f {ruta_excel} --c {drive_name}"
-        process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        for line in process.stdout:
-            output_text.insert(tk.END, line)
-            output_text.see(tk.END)
-        process.stdout.close()
-        process.wait()
+        command = ["python3", "main.py", "--f", ruta_excel, "--c", drive_name]
+        subprocess.run(command)
     # Ejecutar el comando en un hilo para no bloquear la interfaz gráfica
     threading.Thread(target=run_command).start()
 

@@ -39,10 +39,10 @@ def generar_certificado(archivo_excel):
             output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
             background_image_path = "Formatos/Imagenes/backCertificado.png"
             tipo = sheetname
-            if pd.isna(df.iat[fila_inicial + 1, 6]):
+            if pd.isna(df.iat[fila_inicial + 1, 7]):
                 inventario = "N.R"
             else:
-                inventario = df.iat[fila_inicial + 1, 6]
+                inventario = df.iat[fila_inicial + 1, 7]
             marca = df.iat[fila_inicial + 1, 1] if pd.notna(df.iat[fila_inicial + 1, 1]) else "N.R"
             modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
             serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"

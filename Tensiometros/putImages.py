@@ -43,24 +43,33 @@ def crear_paginas(archivo_excel):
         else:
             nota = str(nota)
         fecha = df.iat[5, 15]
+        metrologo = df.iat[10, 15]
+        nombreEse = df.iat[3, 15]
         desviacionestandar = df.iat[fila_inicial + 10, 1]
-        primera = df.iloc[fila_inicial + 6, 1:12].astype(float).tolist()
-        segunda = df.iloc[fila_inicial + 7, 1:12].astype(float).tolist()
-        incertidumbre =  df.iat[fila_inicial + 11, 1]
-        incertidumbres_expandida =  df.iat[fila_inicial + 12, 1]
+        primera = df.iloc[fila_inicial + 6, 1:12].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
+        segunda = df.iloc[fila_inicial + 7, 1:12].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
+        errores = df.iloc[fila_inicial + 8, 1:12].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
+        incertidumbre = df.iat[fila_inicial + 11, 1]
+        incertidumbre_expandida = df.iat[fila_inicial + 12, 1]
+
+        if desviacionestandar == "N.R":
+            desviacionestandar = str(desviacionestandar)
+        if incertidumbre == "N.R":
+            incertidumbre = str(incertidumbre)
+        if incertidumbre_expandida == "N.R":
+            incertidumbre_expandida = str(incertidumbre_expandida)
         errores_promedio.append(error_promedio)
-        errores = df.iloc[fila_inicial + 8, 1:12].astype(float).tolist()
         primeras.append(primera)
         segundas.append(segunda)
         incertidumbres.append(incertidumbre)
-        incertidumbres_expandidas.append(incertidumbres_expandida)
+        incertidumbres_expandidas.append(incertidumbre_expandida)
         certificados.append(nocertificado)
         desviaciones.append(desviacionestandar)
         errores_list.append(errores)
         notas.append(nota)
         fila_inicial += 13
     for certficado in certificados:
-        agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, fecha)
+        agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, fecha, metrologo, nombreEse)
         img_superior_path1 = os.path.join(inferior_directory, certficado + ".png")
         img_superior_path2 = os.path.join(superior_directory, certficado + ".png")
         output_pdf_path = os.path.join(output_directory3, certficado + ".pdf")
@@ -75,7 +84,7 @@ def crear_paginas(archivo_excel):
             os.system("python3 UnirPartes.py")
             break
 
-def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha):
+def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha, metrologo, nombreEse):
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -87,8 +96,8 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha)
     c.setFont("Arial", 15)
     c.drawString(270, 165, fecha)
     c.drawString(270, 136, fecha)
-    c.drawString(270, 108, "Puerto Boyaca, Boyaca")
-    c.drawString(270, 75, "Ruben Dario Ospina Lagos")
+    c.drawString(270, 108, nombreEse )
+    c.drawString(270, 75, metrologo)
     c.save()
 def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incertidumbre, incertidumbre_expandida, primera, segunda, errores_list):
     carta_ancho, carta_alto = letter
@@ -98,21 +107,21 @@ def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incert
     pdfmetrics.registerFont(TTFont('ArialBold', 'Formatos/Fuentes/ArialBold.ttf'))
     pdfmetrics.registerFont(TTFont('ArialI', 'Formatos/Fuentes/ArialI.ttf'))
     c.setFont("ArialI", 14)
-    c.drawString(345, 630, "22.5")
-    c.drawString(438, 630, "26.8")
-    c.drawString(390, 600, "1012")
-    c.drawString(345, 570, "59")
-    c.drawString(438, 570, "68")
-    c.drawString(386, 390, "{:.2f}".format(float(f"{incertidumbre_expandida:.2f}")))
-    c.drawString(386, 375, "{:.2f}".format(float(f"{incertidumbre:.2f}")))
+    c.drawString(345, 630, "24")
+    c.drawString(438, 630, "27")
+    c.drawString(390, 600, "1011")
+    c.drawString(345, 570, "52")
+    c.drawString(438, 570, "60")
+    c.drawString(386, 390, "{:.2f}".format(float(f"{incertidumbre_expandida:.2f}")) if isinstance(incertidumbre_expandida, float) else str(incertidumbre_expandida))
+    c.drawString(386, 375, "{:.2f}".format(float(f"{incertidumbre:.2f}")) if isinstance(incertidumbre, float) else str(incertidumbre))
     c.setFont("ArialI", 10)
     for i in range(11):
-        c.drawString(125 + i * 42, 125, "{:.2f}".format(float(f"{primera[i]:.2f}")))
+        c.drawString(125 + i * 42, 125, "{:.2f}".format(float(f"{primera[i]:.2f}")) if isinstance(primera[i], float) else str(primera[i]))
     for i in range(11):
-        c.drawString(125 + i * 42, 95 , "{:.2f}".format(float(f"{segunda[i]:.2f}")))
+        c.drawString(125 + i * 42, 95, "{:.2f}".format(float(f"{segunda[i]:.2f}")) if isinstance(segunda[i], float) else str(segunda[i]))
     c.setFont("ArialI", 12)
     for i in range(11):
-        c.drawString(125 + i * 42, 70 , "{:.2f}".format(float(f"{errores_list[i]:.2f}")))
+        c.drawString(125 + i * 42, 70, "{:.2f}".format(float(f"{errores_list[i]:.2f}")) if isinstance(errores_list[i], float) else str(errores_list[i]))
     c.save()
 
 def agregar_imagenes_pdf3(img_fondo_path, img_superior_path1, img_superior_path2, output_pdf_path, yinferior, ysuperior, error_promedio, desviacion):

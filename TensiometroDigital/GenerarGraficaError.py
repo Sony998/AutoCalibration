@@ -4,7 +4,7 @@ import os
 import numpy as np
 
 # Cargar el archivo Excel
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/TensiometrosSantana.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name='TENSIOMETRO DIGITAL', header=None)   
 fila_actual = 0
 nombreEse = df.iat[3, 10]

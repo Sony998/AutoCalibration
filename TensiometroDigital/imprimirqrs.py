@@ -3,8 +3,8 @@ from PIL import Image
 from fpdf import FPDF
 
 # Directorios a buscar
-directories = ['/home/raven/puertoboyaca/TENSIOMETROS/OUTPUT/QRS']#,'/home/raven/CODE/PULIR/Basculas2/QRS','/home/raven/CODE/PULIR/Basculas/QRS']
-output_pdf = '/home/raven/puertoboyaca/TENSIOMETROS/OUTPUT/Imprimir/QRS.pdf'
+directories = ['/home/raven/Desktop/BACKUP/TensiometroDigital/']#,'/home/raven/CODE/PULIR/Basculas2/QRS','/home/raven/CODE/PULIR/Basculas/QRS']
+output_pdf = 'OUTPUT/Imprimir/QRS.pdf'
 
 images = []
 for directory in directories:

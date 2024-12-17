@@ -4,7 +4,7 @@ import json
 import pandas as pd
 import os
 sheetname = "TENSIOMETRO DIGITAL"   
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/TensiometrosSantana.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
 fila_actual = 0
 output_directory = "OUTPUT/QRS"

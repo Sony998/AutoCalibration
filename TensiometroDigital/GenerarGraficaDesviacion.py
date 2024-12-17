@@ -3,7 +3,7 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/TensiometrosSantana.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name='TENSIOMETRO DIGITAL', header=None)   
 fila_actual = 0
 nombreEse = df.iat[3, 10]
@@ -53,7 +53,7 @@ def sistolica(fila_actual, nombreEse):
         ax.set_xlabel("PATRON")
         ax.set_ylabel("ERROR")
         ax.set_title(
-            nombreEse + "- SISTOLICA \n" + certificado,
+            nombreEse + " - SISTOLICA \n" + certificado,
             fontsize=10,
             fontweight="bold",
         )
@@ -102,7 +102,7 @@ def diastolica(fila_actual, nombreEse):
         ax.set_xlabel("PATRON")
         ax.set_ylabel("ERROR")
         ax.set_title(
-            nombreEse + "- DIASTOLICA\n" + certificado,
+            nombreEse + " - DIASTOLICA\n" + certificado,
             fontsize=10,
             fontweight="bold",
         )
@@ -152,7 +152,7 @@ def frecuencia(fila_actual, nombreEse):
         ax.set_xlabel("PATRON")
         ax.set_ylabel("ERROR")
         ax.set_title(
-            nombreEse + "- F. DE PULSO\n" + certificado,
+            nombreEse + " - F. DE PULSO\n" + certificado,
             fontsize=10,
             fontweight="bold",
         )

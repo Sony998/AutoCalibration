@@ -3,8 +3,8 @@ from PIL import Image
 from fpdf import FPDF
 
 # Directorios a buscar
-directories = ["/home/raven/MSV/MSVI/OUTPUT/QRS"]#"/home/raven/AutoCalibration/Tensiometros/OUTPUT/QRS","/home/raven/AutoCalibration/Infrarrojos/OUTPUT/QRS"]#/home/raven/CODE/PULIR/Tensiometros/Completos","/home/raven/CODE/PULIR/Termometros/Completos"]
-output_pdf = '/home/raven/Desktop/QRSMONITORES.pdf'
+directories = ["OUTPUT/QRS","/home/raven/AutoCalibration/Infrarrojos/OUTPUT/QRS"]#/home/raven/AutoCalibration/Tensiometros/OUTPUT/QRS","/home/raven/AutoCalibration/Infrarrojos/OUTPUT/QRS"]#/home/raven/CODE/PULIR/Tensiometros/Completos","/home/raven/CODE/PULIR/Termometros/Completos"]
+output_pdf = 'OUTPUT/Imprimir/QRSPulsoximetros.pdf'
 
 images = []
 for directory in directories:
