@@ -3,10 +3,13 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-archivo_excel = '/home/raven/Faltantes.xlsx'
+archivo_excel = '/home/raven/Quipama.xlsx'
 fila_actual = 0
 
 df = pd.read_excel(archivo_excel, sheet_name="MONITORES MULTIPARAMETROS", header=None)
+dfdatos = pd.read_excel(archivo_excel, sheet_name='DATOS SOLICITANTE', header=None)
+nombreEse = dfdatos.iat[3, 1]
+
 def calcular_limites_grafica(datos, error_promedio):
     error_promedio = abs(error_promedio)
     error_max = datos.max() + error_promedio
@@ -17,7 +20,6 @@ def calcular_limites_grafica(datos, error_promedio):
 
 def sistolica(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[6,1:7].values.flatten().astype(float)
         datos_seleccionados = df.iloc[fila_actual + 10, 1:7].values.flatten().astype(float) # Fila de los datos seleccionados
@@ -63,7 +65,6 @@ def sistolica(fila_actual):
 
 def diastolica(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[16, 1:7].values.flatten().astype(float)   
         datos_seleccionados = df.iloc[fila_actual + 20, 1:7].values.flatten().astype(float)
@@ -114,7 +115,6 @@ def diastolica(fila_actual):
 
 def frecuencia(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[26, 1:5].values.flatten().astype(float)
         datos_seleccionados = df.iloc[fila_actual + 30, 1:5].values.flatten().astype(float)
@@ -164,7 +164,6 @@ def frecuencia(fila_actual):
 
 def nueva_saturacion(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[fila_actual + 54, 1:6]
         datos_seleccionados = df.iloc[fila_actual + 56, 1:6]
@@ -212,7 +211,6 @@ def nueva_saturacion(fila_actual):
 
 def nuevo_pulso(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[fila_actual + 63,1:6 ]
         datos_seleccionados = df.iloc[fila_actual + 65, 1:6]

@@ -22,4 +22,4 @@ for directory in directories_for_clean:
 
 if os.path.isfile(file):
     os.remove(file) 
-print("Archivo files eliminado")
+print("Archivo files eliminado"))

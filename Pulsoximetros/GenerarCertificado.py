@@ -28,6 +28,7 @@ def create_pdf(output_path, background_image_path, text_data, nocertificado):
     c.save()
 def generar_certificado(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
     while True:
         if fila_inicial >= len(df):
@@ -46,9 +47,9 @@ def generar_certificado(archivo_excel):
             modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
             serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
             ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
-            nombreEse = str(df.iat[3, 10])
-            fecha = str(df.iat[4, 10])
-            direccion = str(df.iat[7, 10])
+            nombreEse = dfdatos.iat[3,1]
+            fecha = dfdatos.iat[4, 1]
+            direccion = dfdatos.iat[6, 1]
             text_data = {
                 (315, 595): ["SATURACION, FRECUENCIA CARDIACA"],
                 (315, 575): [tipo],

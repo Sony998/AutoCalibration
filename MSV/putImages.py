@@ -8,8 +8,10 @@ from reportlab.pdfbase import pdfmetrics
 import pandas as pd
 
 
-archivo_excel = '/home/raven/Faltantes.xlsx'   
-df = pd.read_excel(archivo_excel, sheet_name='MONITORES MULTIPARAMETROS', header=None)
+archivo_excel = '/home/raven/Quipama.xlsx'   
+df = pd.read_excel(archivo_excel, sheet_name='MONITOR MULTIPARAMETRO', header=None)
+dfdatos = pd.read_excel(archivo_excel, sheet_name='DATOS SOLICITANTE', header=None)
+
 fila_actual = 0
 certificados= []
 desviaciones = []
@@ -59,12 +61,17 @@ while True:
     if fila_actual >= len(df):
         break
     certficado= df.iat[fila_actual + 2, 5]
-    fecha = str(df.iat[4, 10])
-    metrologo = str(df.iat[10, 10])
-    ubicacion = str(df.iat[3, 10])
     certificados.append(certficado)
+    nombreEse = dfdatos.iat[3,1]
+    fecha = dfdatos.iat[4, 1]
+    metrologo = dfdatos.iat[7,1]
+    temperaturaminima =dfdatos.iat[10,1]
+    temperaturamaxima = dfdatos.iat[10,2]
+    humedadminima = dfdatos.iat[11,1]
+    humedadmaxima = dfdatos.iat[11,2]
+    presionbarometrica = dfdatos.iat[12,1]
     print(certficado)
-    nota = str(df.iat[fila_actual + 1,5])
+    nota = df.iat[fila_actual + 1,5]
     if pd.isna(nota):
         nota = "No se realizan observaciones"
     else:
@@ -89,7 +96,9 @@ while True:
     fila_actual += 70
 
 
-def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, metrologo, fecha, ubicacion):
+def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, metrologo, fecha, ubicacion,
+                          
+                           ):
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -99,18 +108,18 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, metrol
     c.setFont("ArialI", 14)
     c.drawString(305, 690, nombrecertificado)
     c.setFont("Arial", 12)
-    c.drawString(340, 322, fecha)
-    c.drawString(340, 302, fecha)
+    c.drawString(325, 322, fecha)
+    c.drawString(325, 302, fecha)
     c.setFont("Arial", 9)
-    c.drawString(330, 282, ubicacion)
+    c.drawString(325, 282, ubicacion)
     c.setFont("Arial", 12)
-    c.drawString(340, 262, metrologo)
+    c.drawString(325, 262, metrologo)
     c.setFont("Arial", 13)
-    c.drawString(335, 160, "22.5")
-    c.drawString(425, 160, "26.8")
-    c.drawString(375, 145, "1012")
-    c.drawString(340, 125, "59")
-    c.drawString(430, 125, "68")
+    c.drawString(335, 160, str(temperaturaminima))
+    c.drawString(425, 160, str(temperaturamaxima))
+    c.drawString(375, 145, str(presionbarometrica))
+    c.drawString(340, 125, str(humedadminima))
+    c.drawString(430, 125, str(humedadmaxima))
     c.save()
     
 def agregar_imagenes_pdf2(fondo_path, output_pdf_path, ecg_list, fdepulso_list, diastolica_list, sistolica_list, saturacion_list, fp_list, respiracion_list): 
@@ -260,7 +269,7 @@ def agregar_imagenes_pdf4(fondo_path, output_pdf_path , nota):
 
 
 for certficado in certificados:
-    agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, metrologo, fecha, ubicacion)
+    agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, metrologo, fecha, nombreEse)
     imagen_error_sistolica = os.path.join(errorsistolica_directory, certficado + ".png")
     imagen_desviacion_sistolica = os.path.join(desviacionsistolica_directory, certficado + ".png")
     agregar_imagenes_pdf3(img_fondo_path3, imagen_error_sistolica, imagen_desviacion_sistolica, output_directory3 + certficado +".pdf", yinferior=60, ysuperior=410)     #  agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado)

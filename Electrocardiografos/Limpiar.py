@@ -4,12 +4,10 @@ directories_for_clean = [
                         "OUTPUT/Certificados",
                         "OUTPUT/Completos",
                         "OUTPUT/Graficos/Error",
-                        "OUTPUT/Graficos/Desviacion",
                         "OUTPUT/Certificados",
                         "OUTPUT/Reportes/1",
                         "OUTPUT/Reportes/2",
                         "OUTPUT/Reportes/3",
-                        "OUTPUT/Reportes/4",
                         "OUTPUT/QRS",
                         "OUTPUT/Imprimir"
                         ]

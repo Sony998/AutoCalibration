@@ -8,6 +8,8 @@ def main(archivo_excel):
     sheetname = "MONITORES MULTIPARAMETROS"
     output_directory = "OUTPUT/QRS"
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
+
     fila_actual = 0
 
     if not os.path.exists(output_directory):
@@ -23,7 +25,7 @@ def main(archivo_excel):
     print(f"Certificados y series encontrados: {certificados_series}")
     background_template = Image.open("Formatos/Imagenes/backqr.png")
     bg_width, bg_height = background_template.size
-    constant_text2 = "30 de octubre de 2024"
+    fecha = dfdatos.iat[4, 1]
     font = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 95)
     font2 = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 70)
 
@@ -44,7 +46,7 @@ def main(archivo_excel):
             draw = ImageDraw.Draw(background)
 
             draw.text((120, 515), certificado, font=font, fill="white")
-            draw.text((250, 660), constant_text2, font=font2, fill="white")
+            draw.text((250, 660), fecha, font=font2, fill="white")
             draw.text((240, 780), serie, font=font2, fill="white")
             qr_width, qr_height = qr_image.size
             pos = (int((bg_width / 2) + 200), int((bg_height / 2) - 40))
@@ -71,3 +73,4 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
     main(args.f)
+ 

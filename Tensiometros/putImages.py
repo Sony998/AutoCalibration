@@ -29,12 +29,12 @@ inferior_directory = "OUTPUT/Graficos/Error"
 superior_directory = "OUTPUT/Graficos/Desviacion"
 def crear_paginas(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
     errorpos = 0
     while True:
         if fila_inicial >= len(df):
             break
-        fecha = str(df.iat[1, 12])
         nocertificado = df.iat[fila_inicial + 2 , 5]
         error_promedio = df.iat[fila_inicial + 9, 1]
         nota = df.iat[fila_inicial + 1, 5]
@@ -42,9 +42,14 @@ def crear_paginas(archivo_excel):
             nota = "No se realizan observaciones"
         else:
             nota = str(nota)
-        fecha = df.iat[5, 15]
-        metrologo = df.iat[10, 15]
-        nombreEse = df.iat[3, 15]
+        nombreEse = dfdatos.iat[3,1]
+        fecha = dfdatos.iat[4, 1]
+        metrologo = dfdatos.iat[7,1]
+        temperaturaminima =dfdatos.iat[10,1]
+        temperaturamaxima = dfdatos.iat[10,2]
+        humedadminima = dfdatos.iat[11,1]
+        humedadmaxima = dfdatos.iat[11,2]
+        presionbarometrica = dfdatos.iat[12,1]
         desviacionestandar = df.iat[fila_inicial + 10, 1]
         primera = df.iloc[fila_inicial + 6, 1:12].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
         segunda = df.iloc[fila_inicial + 7, 1:12].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
@@ -73,9 +78,9 @@ def crear_paginas(archivo_excel):
         img_superior_path1 = os.path.join(inferior_directory, certficado + ".png")
         img_superior_path2 = os.path.join(superior_directory, certficado + ".png")
         output_pdf_path = os.path.join(output_directory3, certficado + ".pdf")
-        agregar_imagenes_pdf2(img_fondo_path2, os.path.join(output_directory2, certficado + ".pdf"), certficado, incertidumbres[errorpos], incertidumbres_expandidas[errorpos], primeras[errorpos], segundas[errorpos], errores_list[errorpos])
+        agregar_imagenes_pdf2(img_fondo_path2, os.path.join(output_directory2, certficado + ".pdf"), certficado, incertidumbres[errorpos], incertidumbres_expandidas[errorpos], primeras[errorpos], segundas[errorpos], errores_list[errorpos], temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica)
         agregar_imagenes_pdf3(img_fondo_path3, img_superior_path1, img_superior_path2, output_pdf_path, 
-                            yinferior=125, ysuperior=378, error_promedio=errores_promedio[errorpos], desviacion=desviaciones[errorpos])
+                            yinferior=378, ysuperior=125, error_promedio=errores_promedio[errorpos], desviacion=desviaciones[errorpos])
         agregar_imagenes_pdf4(img_fondo_path4, os.path.join(output_directory4, certficado + ".pdf"), notas[errorpos] )
         print("Se ha creado el reporte completo para el tensiometro con el certificado: ", certficado) 
         errorpos += 1
@@ -94,12 +99,14 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha,
     c.setFont("ArialI", 14)
     c.drawString(335, 660, nombrecertificado)
     c.setFont("Arial", 15)
-    c.drawString(270, 165, fecha)
-    c.drawString(270, 136, fecha)
-    c.drawString(270, 108, nombreEse )
-    c.drawString(270, 75, metrologo)
+    c.drawString(240, 165, fecha)
+    c.drawString(240, 136, fecha)
+    c.setFont("Arial", 12)
+    c.drawString(240, 108, nombreEse )
+    c.setFont("Arial", 15)
+    c.drawString(240, 75, metrologo)
     c.save()
-def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incertidumbre, incertidumbre_expandida, primera, segunda, errores_list):
+def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incertidumbre, incertidumbre_expandida, primera, segunda, errores_list, temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica):
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -107,11 +114,11 @@ def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incert
     pdfmetrics.registerFont(TTFont('ArialBold', 'Formatos/Fuentes/ArialBold.ttf'))
     pdfmetrics.registerFont(TTFont('ArialI', 'Formatos/Fuentes/ArialI.ttf'))
     c.setFont("ArialI", 14)
-    c.drawString(345, 630, "24")
-    c.drawString(438, 630, "27")
-    c.drawString(390, 600, "1011")
-    c.drawString(345, 570, "52")
-    c.drawString(438, 570, "60")
+    c.drawString(345, 630, str(temperaturaminima))
+    c.drawString(438, 630, str(temperaturamaxima))
+    c.drawString(390, 600, str(presionbarometrica))
+    c.drawString(345, 570, str(humedadminima))
+    c.drawString(438, 570, str(humedadmaxima))
     c.drawString(386, 390, "{:.2f}".format(float(f"{incertidumbre_expandida:.2f}")) if isinstance(incertidumbre_expandida, float) else str(incertidumbre_expandida))
     c.drawString(386, 375, "{:.2f}".format(float(f"{incertidumbre:.2f}")) if isinstance(incertidumbre, float) else str(incertidumbre))
     c.setFont("ArialI", 10)

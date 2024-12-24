@@ -29,12 +29,16 @@ def create_pdf(output_path, background_image_path, text_data, certificado):
     c.save()
 def generar_certificado(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
     while True:
         if fila_inicial >= len(df):
             print("Fin del archivo")
             break
         else:
+            nombreEse = dfdatos.iat[3,1]
+            fecha = dfdatos.iat[4, 1]
+            direccion = dfdatos.iat[6, 1]
             certificado = df.iat[fila_inicial + 2, 5]
             output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
             background_image_path = "Formatos/Imagenes/backCertificado.png"
@@ -47,9 +51,6 @@ def generar_certificado(archivo_excel):
             modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
             serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
             ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
-            nombreEse = df.iat[3, 15]
-            fecha = df.iat[5, 15]
-            direccion = df.iat[7, 15]
             text_data = {
                 (315, 595): ["PRESION"],
                 (315, 575): [tipo],

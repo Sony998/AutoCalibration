@@ -16,8 +16,7 @@ def obtener_archivos_pdf():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ejecutar scripts en orden con un archivo específico.")
     parser.add_argument(
-        "--f", 
-        required=True, 
+        "--f",  
         help="Especifica el archivo que deben usar los scripts, por ejemplo: Tensiometros.xlsx"
     )
     parser.add_argument(

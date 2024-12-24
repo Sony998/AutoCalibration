@@ -3,8 +3,8 @@ import numpy as np
 import os
 import matplotlib.pyplot as plt
 
-archivo_excel = 'pulido.xlsx'
-fila_actual = 5
+archivo_excel = '/home/raven/socota.xlsx'
+fila_actual = 0
 df = pd.read_excel(archivo_excel, sheet_name="TERMOMETRO", header=None)
 
 def calcular_limites_grafica(datos):
@@ -19,12 +19,13 @@ while True:
     if fila_actual >= len(df):
         print("Fin del archivo")
         break
-    nombrecertificado = df.iat[fila_actual, 7]
-    datospatron = df.iloc[9, 1:6].astype(float)
+    nombreEse = str(df.iat[3, 15])
+    nocertificado = df.iat[fila_actual + 2 , 5]
+    datospatron = df.iloc[fila_actual + 4, 1:6].astype(int)
     datos_seleccionados = df.iloc[fila_actual + 6, 1:6].astype(float)
     error_promedio = df.iat[fila_actual + 7, 1]
     desviacionestandar = df.iat[fila_actual + 8, 1]
-    print(nombrecertificado, desviacionestandar)
+    print(nocertificado, desviacionestandar)
     errormaximo = max(datos_seleccionados) - desviacionestandar
     errorminimo = min(datos_seleccionados) + desviacionestandar
     errores_promedio = np.full(len(datospatron), error_promedio)
@@ -58,12 +59,12 @@ while True:
     ax.set_xlabel("PATRON")
     ax.set_ylabel("ERROR")
     ax.set_title(
-        "E.S.E CENTRO DE SALUD SANTA LUCIA \n" + nombrecertificado,
+        nombreEse + "\n" + nocertificado,
         fontsize=10,
         fontweight="bold",
     )
     ax.legend()
-    output_dir = "Graficos/Desviacion"
+    output_dir = "OUTPUT/Graficos/Desviacion"
     os.makedirs(output_dir, exist_ok=True)
-    plt.savefig(f"{output_dir}/{nombrecertificado}.png",dpi=300, bbox_inches='tight')
-    fila_actual += 19
+    plt.savefig(f"{output_dir}/{nocertificado}.png",dpi=300, bbox_inches='tight')
+    fila_actual += 13

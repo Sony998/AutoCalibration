@@ -6,11 +6,11 @@ import os
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 import pandas as pd
-archivo_excel = 'pulido.xlsx'   
+archivo_excel = '/home/raven/socota.xlsx'   
 df = pd.read_excel(archivo_excel, sheet_name='TERMOMETRO', header=None)
-fila_actual = 5
+fila_actual = 0
 desviaciones = []
-certificados = []
+nocertificados = []
 errores_list = []
 errores_promedio = []
 primeras = []
@@ -18,22 +18,22 @@ segundas = []
 incertidumbres_expandidas = []
 incertidumbres = []
 notas = []
-fecha = "7 de noviembre de 2024"
-img_fondo_path1 = "partesReporte/Pagina1.png"
-img_fondo_path2 = "partesReporte/Pagina2.png"
-img_fondo_path3 = "partesReporte/Pagina3.png"
-img_fondo_path4 = "partesReporte/Pagina4.png"
-output_directory1 = "Reportes/1"
-output_directory2 = "Reportes/2"
-output_directory3 = "Reportes/3"
-output_directory4 = "Reportes/4"
-inferior_directory = "Graficos/Error"
-superior_directory = "Graficos/Desviacion"
+fecha = df.iat[5, 15]
+img_fondo_path1 = "Formatos/partesReporte/Pagina1.png"
+img_fondo_path2 = "Formatos/partesReporte/Pagina2.png"
+img_fondo_path3 = "Formatos/partesReporte/Pagina3.png"
+img_fondo_path4 = "Formatos/partesReporte/Pagina4.png"
+output_directory1 = "OUTPUT/Reportes/1"
+output_directory2 = "OUTPUT/Reportes/2"
+output_directory3 = "OUTPUT/Reportes/3"
+output_directory4 = "OUTPUT/Reportes/4"
+inferior_directory = "OUTPUT/Graficos/Error"
+superior_directory = "OUTPUT/Graficos/Desviacion"
 errorpos = 0
 while True:
     if fila_actual >= len(df):
         break
-    certficado = df.iat[fila_actual, 7]
+    nocertificado = df.iat[fila_actual + 2 , 5]
     error_promedio = df.iat[fila_actual + 7, 1]
     nota = df.iat[fila_actual + 4, 7]
     if pd.isna(nota):
@@ -49,12 +49,12 @@ while True:
     primeras.append(primera)
     incertidumbres.append(incertidumbre)
     incertidumbres_expandidas.append(incertidumbres_expandida)
-    certificados.append(certficado)
+    nocertificados.append(nocertificado)
     desviaciones.append(desviacion)
     errores_list.append(errores)
     notas.append(nota)
-    print(f"Certificado: {certficado}, Error promedio: {error_promedio}, desviacion {desviacion} nota {nota}")
-    fila_actual += 19
+    print(f"nocertificado: {nocertificado}, Error promedio: {error_promedio}, desviacion {desviacion} nota {nota}")
+    fila_actual += 13
 
 
 
@@ -80,7 +80,7 @@ def agregar_imagenes_pdf3(img_fondo_path, img_superior_path1, img_superior_path2
     c.drawString(350, 690, "{:.2f}".format(float(f"{error_promedio:.2f}")))
     c.drawString(350, 675, "{:.2f}".format(float(f"{desviacion:.2f}")))
     c.save()
-def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado):
+def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrenocertificado):
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -88,15 +88,15 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado):
     pdfmetrics.registerFont(TTFont('ArialBold', 'ArialBold.ttf'))
     pdfmetrics.registerFont(TTFont('ArialI', 'ArialI.ttf'))
     c.setFont("ArialI", 14)
-    c.drawString(312, 664, nombrecertificado)
+    c.drawString(312, 664, nombrenocertificado)
     c.setFont("Arial", 15)
-    c.drawString(270, 235, "6 de noviembre del 2024")
-    c.drawString(270, 205, "7 de noviembre del 2024")
-    c.drawString(295, 177, "Cucaita, Boyaca")
+    c.drawString(270, 235, "19 de diciembre del 2024")
+    c.drawString(270, 205, "19 de diciembre del 2024")
+    c.drawString(295, 177, "Santana, Boyaca")
     c.drawString(250, 150, "Ingeniera Luz Alejandra Vargas")
     c.save()
 
-""" for certficado in certificados:
+""" for certficado in nocertificados:
     img_superior_path1 = os.path.join(inferior_directory, certficado + ".png")
     img_superior_path2 = os.path.join(superior_directory, certficado + ".png")
     output_pdf_path = os.path.join(output_directory3, certficado + ".pdf")
@@ -104,7 +104,7 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado):
                          yinferior=125, ysuperior=378, error_promedio=errores_promedio[errorpos], desviacion=desviaciones[errorpos])
     print(f"Se ha creado el archivo {output_pdf_path}","con error promedio de", errores_promedio[errorpos])
     errorpos += 1 """
-def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incertidumbre, incertidumbre_expandida, primera, errores_list):
+def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrenocertificado, incertidumbre, incertidumbre_expandida, primera, errores_list):
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -126,7 +126,7 @@ def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incert
         c.drawString(175 + i * 52, 125, "{:.2f}".format(float(f"{errores_list[i]:.2f}")))
     c.save()
 
-""" for certficado, error_promedio, desviacion in zip(certificados, errores_promedio, desviaciones):
+""" for certficado, error_promedio, desviacion in zip(nocertificados, errores_promedio, desviaciones):
     agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado)
  """
 def agregar_imagenes_pdf4(fondo_path, output_pdf_path , nota):
@@ -148,11 +148,11 @@ def agregar_imagenes_pdf4(fondo_path, output_pdf_path , nota):
         c.drawString(63, 630, nota)
     c.save()
 
-""" for certficado, error_promedio, desviacion in zip(certificados, errores_list, desviaciones):
+""" for certficado, error_promedio, desviacion in zip(nocertificados, errores_list, desviaciones):
     agregar_imagenes_pdf2(img_fondo_path2, os.path.join(output_directory2, certficado + ".pdf"), certficado, incertidumbres[errorpos], incertidumbres_expandidas[errorpos], primeras[errorpos], segundas[errorpos], errores_list[errorpos])
     errorpos += 1
  """
-for certficado, error_promedio, desviacion in zip(certificados, errores_list, desviaciones):
+for certficado, error_promedio, desviacion in zip(nocertificados, errores_list, desviaciones):
     agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado)
     agregar_imagenes_pdf2(img_fondo_path2, os.path.join(output_directory2, certficado + ".pdf"), certficado, incertidumbres[errorpos], incertidumbres_expandidas[errorpos], primeras[errorpos], errores_list[errorpos])
     agregar_imagenes_pdf4(img_fondo_path4, os.path.join(output_directory4, certficado + ".pdf"), notas[errorpos] )
@@ -160,7 +160,7 @@ for certficado, error_promedio, desviacion in zip(certificados, errores_list, de
     img_superior_path2 = os.path.join(superior_directory, certficado + ".png")
     output_pdf_path = os.path.join(output_directory3, certficado + ".pdf")
     agregar_imagenes_pdf3(img_fondo_path3, img_superior_path1, img_superior_path2, output_pdf_path, 
-                         yinferior=125, ysuperior=378, error_promedio=errores_promedio[errorpos], desviacion=desviacion)
+                         yinferior=378, ysuperior=125, error_promedio=errores_promedio[errorpos], desviacion=desviacion)
     errorpos += 1
     print(f"Se ha creado el archivo {output_pdf_path} con error promedio de {error_promedio}")
 

@@ -6,8 +6,9 @@ import os
 sheetname = "BASCULA PESA BEBE"
 
 # Cargar archivo Excel
-archivo_excel = '/home/raven/Chitaraque.xlsx'
+archivo_excel = '/home/raven/ramiriqui.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
 
 # Inicialización
 fila_actual = 0
@@ -34,7 +35,7 @@ print(f"Certificados y series encontrados: {certificados_series}")
 # Crear imágenes QR solo para los certificados que están en el JSON
 background_template = Image.open("Formatos/Imagenes/backqr.png")
 bg_width, bg_height = background_template.size
-fecha = df.iat[5, 15]
+fecha = dfdatos.iat[4, 1]
 font = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 95)
 font2 = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 70)
 

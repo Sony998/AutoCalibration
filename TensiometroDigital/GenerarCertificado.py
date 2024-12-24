@@ -6,9 +6,10 @@ from reportlab.pdfbase import pdfmetrics
 import pandas as pd
 
 # Ruta al archivo Excel
-archivo_excel = '/home/raven/TensiometrosSantana.xlsx'
+archivo_excel = '/home/raven/ramiriqui.xlsx'
 sheetname = "TENSIOMETRO DIGITAL"
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
 fila_actual = 0
 
 def create_pdf(output_path, background_image_path, text_data, certificado):
@@ -52,9 +53,9 @@ while True:
         modelo = df.iat[fila_actual + 2, 1] if pd.notna(df.iat[fila_actual + 2, 1]) else "N.R"
         serie = df.iat[fila_actual + 1, 3] if pd.notna(df.iat[fila_actual + 1, 3]) else "N.R"
         ubicacion = df.iat[fila_actual + 2, 3] if pd.notna(df.iat[fila_actual + 2, 3]) else "N.R"
-        nombreEse = df.iat[3, 10]
-        fecha = df.iat[5, 10]
-        direccion = df.iat[7, 10]
+        nombreEse = dfdatos.iat[3,1]
+        fecha = dfdatos.iat[4, 1]
+        direccion = dfdatos.iat[6, 1]
         text_data = {
             (315, 595): ["NIBP"],
             (315, 575): [tipo],

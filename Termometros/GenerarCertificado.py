@@ -4,64 +4,85 @@ from reportlab.lib.utils import ImageReader
 from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 import pandas as pd
-archivo_excel = 'pulido.xlsx'
-df = pd.read_excel(archivo_excel, sheet_name='TERMOMETRO', header=None)
-fila_inicial = 5
-def create_pdf(output_path, background_image_path, text_data, nocertificado):
+import argparse
+
+sheetname = "TERMOMETRO"
+def create_pdf(output_path, background_image_path, text_data, certificado):
     c = canvas.Canvas(output_path, pagesize=letter)
     width, height = letter
     background = ImageReader(background_image_path)
     c.drawImage(background, 0, 0, width=width, height=height)
-    pdfmetrics.registerFont(TTFont('Fraunces', 'Fraunces.ttf'))
-    pdfmetrics.registerFont(TTFont('Arial', 'Arial.ttf'))
+    pdfmetrics.registerFont(TTFont('Fraunces', 'Formatos/Fuentes/Fraunces.ttf'))
+    pdfmetrics.registerFont(TTFont('Arial', 'Formatos/Fuentes/Arial.ttf'))
     c.setFont("Fraunces", 18)
     c.setFillColor("#d7a534")
-    c.drawString(265, 647, nocertificado)
-    for text, position in text_data.items():
+    c.drawString(265, 647, certificado)
+    
+    # Dibujar el resto de los datos
+    for position, texts in text_data.items():
         x, y = position
         c.setFont("Arial", 10)
         c.setFillColor("black")
-        c.drawString(x, y, text)
+        for i, text in enumerate(texts):
+            c.drawString(x, y - i * 15, str(text))  # Ajusta la separación vertical
+    
     c.save()
-while True:
-    if fila_inicial >= len(df):
-        print("Fin del archivo")
-        break
+def generar_certificado(archivo_excel):
+    df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    fila_inicial = 0
+    while True:
+            certificado = df.iat[fila_inicial + 2, 5]
+            output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
+            background_image_path = "Formatos/Imagenes/backCertificado.png"
+            tipo = sheetname
+            if pd.isna(df.iat[fila_inicial + 1, 7]):
+                inventario = "N.R"
+            else:
+                inventario = df.iat[fila_inicial + 1, 7]
+            marca = df.iat[fila_inicial + 1, 1] if pd.notna(df.iat[fila_inicial + 1, 1]) else "N.R"
+            modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
+            serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
+            ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
+            nombreEse = df.iat[3, 15]
+            fecha = df.iat[5, 15]
+            direccion = df.iat[7, 15]
+            text_data = {
+                (315, 595): ["TEMPERATURA"],
+                (315, 575): [tipo],
+                (315, 555): [marca],
+                (315, 535): [modelo],
+                (315, 515): [serie],
+                (315, 495): [inventario],
+                (315, 475): ["°C"],
+                (315, 455): ["0.1 °C"],
+                (315, 435): ["16.64 - 37.21"],
+                (315, 390): [nombreEse],
+                (315, 370): [direccion],
+                (315, 350): [ubicacion],
+                (315, 330): [fecha],
+                (315, 310): ["5"]
+            }
+            create_pdf(output_path, background_image_path, text_data, certificado)
+            print("El certificado" + certificado + " ha sido creado")
+            fila_inicial += 13
+
+def main():
+    parser = argparse.ArgumentParser(description="Generar certificado a partir de un archivo Excel.")
+    parser.add_argument(
+        "--f", 
+        required=True, 
+        help="Especifica el archivo Excel que se debe usar, por ejemplo: Tensiometros.xlsx"
+    )
+    parser.add_argument(
+        "--c", 
+        nargs="+", 
+        help="Especifica el nombre de la nueva carpeta de drive"
+    )
+    args = parser.parse_args()
+    if not args.f:
+        print("Error: No se ha proporcionado un archivo Excel. Por favor, use el argumento --f para especificar el archivo.")
     else:
-        nocertificado = df.iat[fila_inicial, 7]
-        print(nocertificado)
-        output_path = "Certificados/" + nocertificado + ".pdf"
-        background_image_path = "backCertificado.png"
-        tipo = str(df.iat[fila_inicial, 0])
-        marca = str(df.iat[fila_inicial+1, 2])
-        modelo = str(df.iat[fila_inicial + 2, 2])
-        serie = str(df.iat[fila_inicial + 1, 7])
-        resolucion = str(df.iat[fila_inicial + 12, 1])   
-        print(serie)
-        if str(df.iat[fila_inicial + 3, 2]) == "nan":
-            inventario = "N.R"
-        else:
-            inventario = str(df.iat[fila_inicial + 3, 2])
-            print(inventario)
-        nombreEse = str(df.iat[1, 2])
-        direccion = str(df.iat[3, 2])
-        ubicacion = str(df.iat[fila_inicial + 2, 7])
-        fecha = "7 de noviembre de 2024"
-        text_data = {
-            "Grados Celsius": (315, 595),
-            tipo: (315, 575),
-            marca: (315, 555),
-            modelo: (315, 535),
-            serie: (315, 515),
-            inventario: (315, 495),
-            "Grados": (315, 475),
-            resolucion: (315, 455),
-            "16.8 - 37.21": (315, 435),
-            nombreEse: (315, 390),
-            direccion: (315, 370),
-            ubicacion: (315, 350),
-            fecha: (315, 330),
-            "5": (315, 310)
-        }
-        create_pdf(output_path, background_image_path, text_data, nocertificado)
-        fila_inicial += 19
+        generar_certificado(args.f)
+
+if __name__ == "__main__":
+    main()

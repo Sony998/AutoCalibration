@@ -2,12 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import numpy as np
+import argparse
 
-# Cargar el archivo Excel
-archivo_excel = '/home/raven/TensiometrosSantana.xlsx'
-df = pd.read_excel(archivo_excel, sheet_name='TENSIOMETRO DIGITAL', header=None)   
-fila_actual = 0
-nombreEse = df.iat[3, 10]
 def calcular_limites_grafica(datos):
     error_max = datos.max() + 1
     error_min = datos.min() - 1
@@ -15,8 +11,7 @@ def calcular_limites_grafica(datos):
     limite_inferior = error_min
     return limite_superior, limite_inferior
 
-
-def sistolica(fila_actual, nombreEse):
+def sistolica(df, dfdatos, fila_actual, nombreEse):
     while fila_actual < len(df):
         certificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[6, 1:7].astype(int) 
@@ -36,8 +31,7 @@ def sistolica(fila_actual, nombreEse):
         plt.close(fig)
         fila_actual += 35
 
-
-def diastolica(fila_actual, nombreEse):
+def diastolica(df, dfdatos, fila_actual, nombreEse):
     while fila_actual < len(df):
         certificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[16, 1:7].astype(int) 
@@ -56,7 +50,7 @@ def diastolica(fila_actual, nombreEse):
         plt.close(fig)
         fila_actual += 35
 
-def frecuencia(fila_actual, nombreEse):
+def frecuencia(df, dfdatos, fila_actual, nombreEse):
     while fila_actual < len(df):
         certificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[26, 1:5].astype(int) 
@@ -76,6 +70,16 @@ def frecuencia(fila_actual, nombreEse):
         fila_actual += 35
 
 if __name__ == "__main__":
-    sistolica(fila_actual, nombreEse)
-    diastolica(fila_actual, nombreEse)
-    frecuencia(fila_actual, nombreEse)
+    parser = argparse.ArgumentParser(description='Generar gráficos de error para tensiómetro digital.')
+    parser.add_argument('--f', type=str, required=True, help='Nombre del archivo de Excel')
+    args = parser.parse_args()
+
+    archivo_excel = args.f
+    dfdatos = pd.read_excel(archivo_excel, sheet_name='DATOS SOLICITANTE', header=None)
+    df = pd.read_excel(archivo_excel, sheet_name='TENSIOMETRO DIGITAL', header=None)   
+    fila_actual = 0
+    nombreEse = dfdatos.iat[3, 1]
+
+    sistolica(df, dfdatos, fila_actual, nombreEse)
+    diastolica(df, dfdatos, fila_actual, nombreEse)
+    frecuencia(df, dfdatos, fila_actual, nombreEse)

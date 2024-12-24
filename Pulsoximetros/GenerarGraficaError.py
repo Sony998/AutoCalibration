@@ -3,8 +3,9 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 sheetname = "PULSO OXIMETRO"
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/Quipama.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)   
+dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
 fila_inicial = 0
 
 def calcular_limites_grafica(datos):
@@ -13,10 +14,9 @@ def calcular_limites_grafica(datos):
     limite_superior = error_max
     limite_inferior = error_min
     return limite_superior, limite_inferior
-
+nombreEse = dfdatos.iat[3,1]
 def saturacion(fila_inicial):
     while fila_inicial < len(df):
-        nombreEse = str(df.iat[3, 10])
         nocertificado = df.iat[fila_inicial + 2, 5]
         datospatron = df.iloc[6, 1:6].astype(int) 
         datos_seleccionados = df.iloc[fila_inicial + 8, 1:6].astype(float)  # Fila de los datos seleccionados
@@ -43,7 +43,6 @@ def saturacion(fila_inicial):
 
 def pulso(fila_inicial):
     while fila_inicial < len(df):
-        nombreEse = str(df.iat[3, 10])
         nocertificado = df.iat[fila_inicial + 2, 5]
         datospatron = df.iloc[14, 1:6].astype(int) 
         datos_seleccionados = df.iloc[fila_inicial + 8, 1:6].astype(float)   # Fila de los datos seleccionados

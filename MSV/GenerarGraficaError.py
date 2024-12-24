@@ -4,8 +4,10 @@ import os
 import numpy as np
 
 # Cargar el archivo Excel
-archivo_excel = '/home/raven/Faltantes.xlsx'
+archivo_excel = '/home/raven/Quipama.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name='MONITORES MULTIPARAMETROS', header=None)   
+dfdatos = pd.read_excel(archivo_excel, sheet_name='DATOS SOLICITANTE', header=None)
+
 fila_actual = 0
 
 def calcular_limites_grafica(datos):
@@ -15,10 +17,10 @@ def calcular_limites_grafica(datos):
     limite_inferior = error_min
     return limite_superior, limite_inferior
 
+nombreEse = dfdatos.iat[3, 1]
 
 def sistolica(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[6,1:7].values.flatten().astype(float)
         datos_seleccionados = df.iloc[fila_actual + 10, 1:7].values.flatten().astype(float) # Fila de los datos seleccionados
@@ -39,7 +41,6 @@ def sistolica(fila_actual):
 
 def diastolica(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[16, 1:7].values.flatten().astype(float)   
         datos_seleccionados = df.iloc[fila_actual + 20, 1:7].values.flatten().astype(float)
@@ -60,7 +61,6 @@ def diastolica(fila_actual):
 
 def frecuencia(fila_actual):
     while fila_actual < len(df):
-        nombreEse = df.iat[3, 15]
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[26, 1:5].values.flatten().astype(float)
         datos_seleccionados = df.iloc[fila_actual + 30, 1:5].values.flatten().astype(float)  # Fila de los datos seleccionados
@@ -79,7 +79,6 @@ def frecuencia(fila_actual):
         fila_actual += 70
 
 def saturacion(fila_actual):
-    nombreEse = df.iat[3, 15]
     while fila_actual < len(df):
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[fila_actual + 54, 1:6]
@@ -97,8 +96,8 @@ def saturacion(fila_actual):
         plt.savefig(f"{output_dir}/{nombrecertificado}.png", dpi=300, bbox_inches='tight')
         plt.close(fig)
         fila_actual += 70
+
 def pulso(fila_actual):
-    nombreEse = df.iat[3, 15]
     while fila_actual < len(df):
         nombrecertificado = df.iat[fila_actual + 2, 5]
         datospatron = df.iloc[fila_actual + 63,1:6 ]

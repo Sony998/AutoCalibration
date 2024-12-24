@@ -5,8 +5,10 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 import pandas as pd
 sheetname = "MONITORES MULTIPARAMETROS"   
-archivo_excel = '/home/raven/Faltantes.xlsx'
+archivo_excel = '/home/raven/Quipama.xlsx'
 df = pd.read_excel(archivo_excel, sheetname, header=None)
+dfdatos = pd.read_excel(archivo_excel, sheet_name='DATOS SOLICITANTE', header=None)
+
 fila_actual = 0
 def create_pdf(output_path, background_image_path, text_data, certificado):
     c = canvas.Canvas(output_path, pagesize=letter)
@@ -42,9 +44,9 @@ while True:
             inventario = "N.R"
         else:
             inventario = df.iat[fila_actual + 1, 7]
-        nombreEse = df.iat[3, 10]
-        fecha = df.iat[4, 10]
-        direccion = df.iat[7, 10]
+        nombreEse = dfdatos.iat[3,1]
+        fecha = dfdatos.iat[4, 1]
+        direccion = dfdatos.iat[6, 1]
         text_data = {
             "NIBP, SPO2, RESP, ECG": (315, 595),
             tipo: (315, 575),

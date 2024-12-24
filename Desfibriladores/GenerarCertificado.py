@@ -29,6 +29,7 @@ def create_pdf(output_path, background_image_path, text_data, certificado):
     c.save()
 def generar_certificado(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
     while True:
         if fila_inicial >= len(df):
@@ -50,9 +51,9 @@ def generar_certificado(archivo_excel):
             rango = str(min(patron)) + " - " + str(max(patron))
             print(rango)
             ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
-            nombreEse = df.iat[3, 13]
-            fecha = df.iat[5, 13]
-            direccion = df.iat[7, 13]
+            nombreEse = dfdatos.iat[3,1]
+            fecha = dfdatos.iat[4, 1]
+            direccion = dfdatos.iat[6, 1]
             text_data = {
                 (315, 595): ["ENERGIA"],
                 (315, 575): [tipo],

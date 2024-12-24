@@ -4,9 +4,9 @@ import os
 import numpy as np
 
 # Cargar el archivo Excel
-archivo_excel = 'pulido.xlsx'
+archivo_excel = '/home/raven/socota.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name='TERMOMETRO', header=None)   
-fila_actual = 5
+fila_actual = 0
 
 def calcular_limites_grafica(datos):
     media = datos.mean()
@@ -17,9 +17,9 @@ def calcular_limites_grafica(datos):
     return limite_inferior, limite_superior
 
 while fila_actual < len(df):
-    nombrecertificado = df.iat[fila_actual, 7]
-    nombrecertificado = "".join([c if c.isalnum() else "_" for c in nombrecertificado])
-    print(nombrecertificado)
+    nombreEse = str(df.iat[3, 15])
+    nocertificado = df.iat[fila_actual + 2 , 5]
+    print(nocertificado)
     datospatron = df.iloc[fila_actual + 4, 1:6].astype(int)
     datos_seleccionados = df.iloc[fila_actual + 6, 1:6].astype(float)
     print(datos_seleccionados)
@@ -30,12 +30,12 @@ while fila_actual < len(df):
     ax.grid(True, which='both', linestyle='--', linewidth=0.5)
     ax.set_xlabel('PATRON')
     ax.set_ylabel('ERROR')
-    ax.set_title(f'E.S.E CENTRO DE SALUD SANTA LUCIA \n{nombrecertificado}', fontsize=10, fontweight='bold')
-    output_dir = "Graficos/Error"
+    ax.set_title(f'{nombreEse} \n{nocertificado}', fontsize=10, fontweight='bold')
+    output_dir = "OUTPUT/Graficos/Error"
     os.makedirs(output_dir, exist_ok=True)
-    plt.savefig(f"{output_dir}/{nombrecertificado}.png", dpi=300, bbox_inches='tight')
-    print(f"Guardado en  {nombrecertificado}.png")
+    plt.savefig(f"{output_dir}/{nocertificado}.png", dpi=300, bbox_inches='tight')
+    print(f"Guardado en  {nocertificado}.png")
     plt.close(fig)
-    fila_actual += 19
+    fila_actual += 13
 else:
     print("Fin del archivo")

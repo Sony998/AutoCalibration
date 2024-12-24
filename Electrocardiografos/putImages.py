@@ -35,22 +35,33 @@ output_directory5 = "OUTPUT/Reportes/5"
 img_directory = "OUTPUT/Graficos/Error"
 def crear_paginas(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
+    print(df)
     fila_inicial = 0
     errorpos = 0
     while True:
         if fila_inicial >= len(df):
+            print("Fin del archivo")
             break
-        nombreEse = df.iat[3, 12]
-        fecha = df.iat[5, 12]
-        ubicacion = df.iat[7, 12]
-        metrologo = df.iat[10,12]
-        if fila_inicial + 2 < len(df) and fila_inicial + 5 < len(df):
-            certificado = df.iat[fila_inicial + 2 , 5]
-            patron = df.iloc[fila_inicial + 5, 1:10].astype(int).tolist()
-        else:
+        if fila_inicial + 2 >= len(df) or fila_inicial + 1 >= len(df):
+            print("Fin del archivo")
             break
+        nombreEse = dfdatos.iat[3,1]
+        fecha = dfdatos.iat[4, 1]
+        metrologo = dfdatos.iat[7,1]
+        temperaturaminima =dfdatos.iat[10,1]
+        temperaturamaxima = dfdatos.iat[10,2]
+        humedadminima = dfdatos.iat[11,1]
+        humedadmaxima = dfdatos.iat[11,2]
+        presionbarometrica = dfdatos.iat[12,1]
+        certificado = df.iat[fila_inicial + 2 , 5]
+        if pd.isna(certificado):  # Verifica si es NaN
+            print(f"El certificado en la fila es NaN. Rompiendo el ciclo.")
+            break
+    
+        patron = df.iloc[fila_inicial + 5, 1:10].astype(int).tolist()
         patrones.append(patron)
-        print(patron)
+        print("Este es el patron",patron)
         error_promedio = df.iat[fila_inicial + 8, 1]
         desviacion = df.iat[fila_inicial + 9, 1]
         nota = df.iat[fila_inicial + 1, 5]
@@ -78,7 +89,7 @@ def crear_paginas(archivo_excel):
         fila_inicial += 23
     for certficado in certificados:
         print(certificados)
-        agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, fecha, metrologo, ubicacion)
+        agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, fecha, metrologo, nombreEse, temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica)
         if errorpos >= len(certificados):
             print("Se han creado todos los reportes.")
             #os.system("python3 UnirPartes.py")
@@ -93,7 +104,7 @@ def crear_paginas(archivo_excel):
         agregar_imagenes_pdf5(img_fondo_path5, os.path.join(output_directory5, certficado + ".pdf"), notas[errorpos])
  """
 
-def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha, metrologo, ubicacion):
+def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha, metrologo, ubicacion, temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica):
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -104,16 +115,18 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha,
     c.setFont("Baskerville", 12)
     c.drawString(310, 665, nombrecertificado)
     c.setFont("Arial", 15)
-    c.drawString(290, 290, fecha)  # desplazado 20 unidades hacia arriba
-    c.drawString(290, 265, fecha)  # desplazado 20 unidades hacia arriba
-    c.drawString(290, 240, ubicacion)  # desplazado 20 unidades hacia arriba
-    c.drawString(290, 215, metrologo)  # desplazado 20 unidades hacia arriba
+    c.drawString(265, 290, fecha)  # desplazado 20 unidades hacia arriba
+    c.drawString(265, 265, fecha)  # desplazado 20 unidades hacia arriba
+    c.setFont("Arial", 12)
+    c.drawString(265, 240, ubicacion)  # desplazado 20 unidades hacia arriba
+    c.setFont("Arial", 15)
+    c.drawString(265, 215, metrologo)  # desplazado 20 unidades hacia arriba
     c.setFont("ArialI", 14)
-    c.drawString(310, 112, "22.5")
-    c.drawString(438, 112, "26.8")
-    c.drawString(360, 95, "1012")
-    c.drawString(310, 74, "59")
-    c.drawString(438, 74, "68")
+    c.drawString(310, 112, str(temperaturaminima))
+    c.drawString(438, 112, str(temperaturamaxima))
+    c.drawString(360, 95, str(presionbarometrica))
+    c.drawString(310, 74, str(humedadminima))
+    c.drawString(438, 74, str(humedadmaxima))
     c.save()
 def agregar_imagenes_pdf2(img_fondo_path, img_superior_path1, output_pdf_path, yinferior, errores, desviacion, error_promedio, ancho):
     img_fondo = Image.open(img_fondo_path).convert("RGBA")
@@ -176,7 +189,7 @@ def agregar_imagenes_pdf3(img_fondo_path, output_pdf_path, ondas, amplitudes, re
     c.drawImage(img_fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
     pdfmetrics.registerFont(TTFont('Arial', 'Formatos/Fuentes/Arial.ttf'))
     c.setFont("Arial", 14)
-    c.drawString(270, 510 , respuesta)
+    c.drawString(270, 510 , str(respuesta))
     for i in range(3):
         c.drawString(260 + i * 80, 685 , ondas[i])
     for i in range(3):

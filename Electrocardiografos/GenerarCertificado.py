@@ -29,49 +29,52 @@ def create_pdf(output_path, background_image_path, text_data, certificado):
     c.save()
 def generar_certificado(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
     while True:
         if fila_inicial >= len(df):
             print("Fin del archivo")
             break
+        if fila_inicial + 2 >= len(df) or fila_inicial + 1 >= len(df):
+            print("Fin del archivo")
+            break
+        certificado = df.iat[fila_inicial + 2, 5]
+        output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
+        background_image_path = "Formatos/Imagenes/backCertificado.png"
+        tipo = sheetname
+        if pd.isna(df.iat[fila_inicial + 1, 6]):
+            inventario = "N.R"
         else:
-            certificado = df.iat[fila_inicial + 2, 5]
-            output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
-            background_image_path = "Formatos/Imagenes/backCertificado.png"
-            tipo = sheetname
-            if pd.isna(df.iat[fila_inicial + 1, 6]):
-                inventario = "N.R"
-            else:
-                inventario = df.iat[fila_inicial + 1, 6]
-            marca = df.iat[fila_inicial + 1, 1] if pd.notna(df.iat[fila_inicial + 1, 1]) else "N.R"
-            modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
-            serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
-            patron = df.iloc[5, 1:10].astype(int).tolist()
-            rango = str(min(patron)) + " - " + str(max(patron))
-            print(rango)
-            ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
-            nombreEse = df.iat[3, 12]
-            fecha = df.iat[5, 12]
-            direccion = df.iat[7, 12]
-            text_data = {
-                (315, 595): ["FRECUENCIA CARDIACA"],
-                (315, 575): [tipo],
-                (315, 555): [marca],
-                (315, 535): [modelo],
-                (315, 515): [serie],
-                (315, 495): [inventario],
-                (315, 475): ["FC"],
-                (315, 455): ["1FC"],
-                (315, 435): [rango],
-                (315, 390): [nombreEse],
-                (315, 370): [direccion],
-                (315, 350): [ubicacion],
-                (315, 330): [fecha],
-                (315, 310): ["4"]
-            }
-            create_pdf(output_path, background_image_path, text_data, certificado)
-            print("El certificado" + certificado + " ha sido creado")
-            fila_inicial += 23
+            inventario = df.iat[fila_inicial + 1, 6]
+        marca = df.iat[fila_inicial + 1, 1] if pd.notna(df.iat[fila_inicial + 1, 1]) else "N.R"
+        modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
+        serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
+        patron = df.iloc[5, 1:10].astype(int).tolist()
+        rango = str(min(patron)) + " - " + str(max(patron))
+        print(rango)
+        ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
+        nombreEse = dfdatos.iat[3,1]
+        fecha = dfdatos.iat[4, 1]
+        direccion = dfdatos.iat[6, 1]
+        text_data = {
+            (315, 595): ["FRECUENCIA CARDIACA"],
+            (315, 575): [tipo],
+            (315, 555): [marca],
+            (315, 535): [modelo],
+            (315, 515): [serie],
+            (315, 495): [inventario],
+            (315, 475): ["FC"],
+            (315, 455): ["1FC"],
+            (315, 435): [rango],
+            (315, 390): [nombreEse],
+            (315, 370): [direccion],
+            (315, 350): [ubicacion],
+            (315, 330): [fecha],
+            (315, 310): ["4"]
+        }
+        create_pdf(output_path, background_image_path, text_data, certificado)
+        print("El certificado" + certificado + " ha sido creado")
+        fila_inicial += 23
 
 def main():
     parser = argparse.ArgumentParser(description="Generar certificado a partir de un archivo Excel.")

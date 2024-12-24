@@ -6,9 +6,9 @@ import os
 sheetname = "PULSO OXIMETRO"
 
 # Cargar archivo Excel
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/Quipama.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
-
+dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
 # Inicialización
 fila_actual = 0
 output_directory = "OUTPUT/QRS"
@@ -34,7 +34,7 @@ print(f"Certificados y series encontrados: {certificados_series}")
 # Crear imágenes QR solo para los certificados que están en el JSON
 background_template = Image.open("Formatos/Imagenes/backqr.png")
 bg_width, bg_height = background_template.size
-constant_text2 = "30 de octubre de 2024"
+fecha = dfdatos.iat[4, 1]
 font = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 80)
 font2 = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 50)
 
@@ -60,7 +60,7 @@ for certificado, serie in certificados_series:
 
         # Añadir el texto del certificado, fecha y serie
         draw.text((130, 580), certificado, font=font, fill="white")
-        draw.text((210, 722), constant_text2, font=font2, fill="white")
+        draw.text((210, 722), fecha, font=font2, fill="white")
         draw.text((200, 815), serie, font=font2, fill="white")
 
         # Añadir el código QR

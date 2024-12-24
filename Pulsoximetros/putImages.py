@@ -9,8 +9,9 @@ import pandas as pd
 sheetname = "PULSO OXIMETRO"
 
 
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/Quipama.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
 fila_inicial = 0
 desviacion_pulso_list = []
 desvaicion_saturacion_list = []
@@ -24,7 +25,14 @@ primeras_pulso_list = []
 incertidumbres_expandidas = []
 incertidumbres = []
 notas = []
-fecha = str(df.iat[4, 10])
+nombreEse = dfdatos.iat[3,1]
+fecha = dfdatos.iat[4, 1]
+metrologo = dfdatos.iat[7,1]
+temperaturaminima =dfdatos.iat[10,1]
+temperaturamaxima = dfdatos.iat[10,2]
+humedadminima = dfdatos.iat[11,1]
+humedadmaxima = dfdatos.iat[11,2]
+presionbarometrica = dfdatos.iat[12,1]
 img_fondo_path1 = "Formatos/partesReporte/Pagina1.png"
 img_fondo_path2 = "Formatos/partesReporte/Pagina2.png"
 img_fondo_path3 = "Formatos/partesReporte/Pagina3.png"
@@ -91,14 +99,14 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha)
     c.setFont("Arial", 12)
     c.drawString(345, 292, fecha)
     c.drawString(345, 270, fecha)
-    c.drawString(345, 246, "Puerto Boyaca, Boyaca")
-    c.drawString(345, 226, "Ruben Dario Ospina Lagos")
+    c.drawString(345, 246, nombreEse)
+    c.drawString(345, 226, metrologo)
     c.setFont("ArialI", 14)
-    c.drawString(345, 135, "22.5")
-    c.drawString(460, 135, "26.8")
-    c.drawString(390, 110, "1012")
-    c.drawString(345, 85, "59")
-    c.drawString(460, 85, "68")
+    c.drawString(345, 135, str(temperaturaminima))
+    c.drawString(460, 135, str(temperaturamaxima))
+    c.drawString(390, 110, str(presionbarometrica))
+    c.drawString(345, 85, str(humedadminima))
+    c.drawString(460, 85, str(humedadmaxima))
     c.save()
 def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incertidumbre, incertidumbre_expandida, primeras_saturacion, errores_saturacion, primeras_pulso, errores_pulso, desviacion_saturacion, desviacion_pulso, error_promedio_saturacion, error_promedio_pulso):
     carta_ancho, carta_alto = letter

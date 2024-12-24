@@ -8,10 +8,10 @@ scripts_generacion = [
     "GenerarGraficaDesviacion.py",
     "putImages.py",
     "UnirPartes.py",
-    "Drive.py",
-    "GenQR.py",
-    "ImprimirTodos.py",
-    "ImprimirQRS.py"
+ #   "Drive.py",
+  #  "GenQR.py",
+   # "ImprimirTodos.py",
+   # "ImprimirQRS.py"
 ]
 def main(file_name, folder_name):
     print(f"Iniciando ejecución de scripts con el archivo: {file_name}")
@@ -41,5 +41,4 @@ if __name__ == "__main__":
         help="Especifica el nombre de la nueva carpeta de drive"
     )
     args = parser.parse_args()
-    args.c = " ".join(args.c)
     main(args.f, args.c)

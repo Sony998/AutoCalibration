@@ -16,9 +16,10 @@ def calcular_limites_grafica(datos):
 
 def generar_grafico_error(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
     while fila_inicial < len(df):
-        nombreEse = df.iat[3, 13]
+        nombreEse = dfdatos.iat[3,1]
         nocertificado = df.iat[fila_inicial + 2 , 5]
         patron = df.iloc[fila_inicial + 13, 1:7].astype(int).tolist()
         datos_seleccionados = df.iloc[fila_inicial + 19, 1:7].astype(float)  # Fila de los datos seleccionados

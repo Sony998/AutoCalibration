@@ -4,7 +4,7 @@ import os
 import matplotlib.pyplot as plt
 
 sheetname = "TERMOMETRO INFRARROJO"
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/SANTANA.xlsx'
 fila_inicial = 0
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
 def calcular_limites_grafica(datos, error_promedio):

@@ -8,8 +8,9 @@ from reportlab.pdfbase import pdfmetrics
 import pandas as pd
 
 
-archivo_excel = '/home/raven/Chitaraque.xlsx'   
+archivo_excel = '/home/raven/ramiriqui.xlsx'   
 df = pd.read_excel(archivo_excel, sheet_name='BASCULA PESA BEBE', header=None)
+dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
 fila_inicial = 0
 desviaciones = []
 nocertificados = []
@@ -21,7 +22,6 @@ repetibilidades = []
 incertidumbres_expandidas = []
 incertidumbres = []
 notas = []
-fecha = str(df.iat[1, 12])
 img_fondo_path1 = "Formatos/partesReporte/Pagina1.png"
 img_fondo_path2 = "Formatos/partesReporte/Pagina2.png"
 img_fondo_path3 = "Formatos/partesReporte/Pagina3.png"
@@ -38,9 +38,14 @@ errorpos = 0
 while True:
     if fila_inicial >= len(df):
         break
-    fecha = df.iat[5, 15]
-    nombreEse = df.iat[3, 15]
-    metrologo = df.iat[10, 15]
+    nombreEse = dfdatos.iat[3,1]
+    fecha = dfdatos.iat[4, 1]
+    metrologo = dfdatos.iat[7,1]
+    temperaturaminima =dfdatos.iat[10,1]
+    temperaturamaxima = dfdatos.iat[10,2]
+    humedadminima = dfdatos.iat[11,1]
+    humedadmaxima = dfdatos.iat[11,2]
+    presionbarometrica = dfdatos.iat[12,1]
     nocertificado = df.iat[fila_inicial + 2 , 5]
     error_promedio = df.iat[fila_inicial + 9, 1]
     nota = df.iat[fila_inicial + 1, 5]
@@ -78,12 +83,14 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha,
     c.setFont("ArialI", 14)
     c.drawString(312, 664, nombrecertificado)
     c.setFont("Arial", 15)
-    c.drawString(240, 240, fecha)
-    c.drawString(240, 205, fecha)
-    c.drawString(240, 175, nombreEse)
-    c.drawString(240, 145, metrologo)
+    c.drawString(210, 240, fecha)
+    c.drawString(210, 205, fecha)
+    c.setFont("Arial", 12)
+    c.drawString(210, 175, nombreEse)
+    c.setFont("Arial", 15)
+    c.drawString(210, 145, metrologo)
     c.save()
-def agregar_imagenes_pdf2(img_fondo_path, output_pdf_path, incertidumbre, incertidumbre_expandida):
+def agregar_imagenes_pdf2(img_fondo_path, output_pdf_path, incertidumbre, incertidumbre_expandida,temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica):
     img_fondo = Image.open(img_fondo_path).convert("RGBA")
     carta_ancho, carta_alto = letter
     fondo_path = "temp_fondo.png"
@@ -95,11 +102,11 @@ def agregar_imagenes_pdf2(img_fondo_path, output_pdf_path, incertidumbre, incert
     pdfmetrics.registerFont(TTFont('ArialI', 'Formatos/Fuentes/ArialI.ttf'))
     c.setFont("Arial", 11)
     c.setFont("ArialI", 14)
-    c.drawString(330, 670, "24")
-    c.drawString(398, 670, "26")
-    c.drawString(360, 642, "1011.2")
-    c.drawString(330, 610, "45")
-    c.drawString(398, 610, "56")
+    c.drawString(330, 670, str(temperaturaminima))
+    c.drawString(398, 670, str(temperaturamaxima))
+    c.drawString(360, 642, str(presionbarometrica))
+    c.drawString(330, 610, str(humedadminima))
+    c.drawString(398, 610, str(humedadmaxima))
     c.drawString(330, 432, "{:.2f}".format(float(f"{incertidumbre_expandida:.2f}")))
     c.drawString(330, 418, "{:.2f}".format(float(f"{incertidumbre:.2f}")))
     c.save()
@@ -136,7 +143,7 @@ def agregar_imagenes_pdf3(fondo_path, output_pdf_path,repetibilidad, primera, se
     pdfmetrics.registerFont(TTFont('ArialBold', 'Formatos/Fuentes/ArialBold.ttf'))
     pdfmetrics.registerFont(TTFont('ArialI', 'Formatos/Fuentes/ArialI.ttf'))
     c.setFont("ArialI", 14)
-    c.drawString(313, 375, "10")
+    c.drawString(313, 375, "5")
     for i in range(7):
         c.drawString(313, 320 - i * 17, "{:.1f}".format(float(f"{repetibilidad[i]:.1f}")))
     c.setFont("ArialI", 10)
@@ -169,7 +176,7 @@ def agregar_imagenes_pdf5(fondo_path, output_pdf_path , nota):
 
 for certficado, error_promedio, desviacion in zip(nocertificados, errores_list, desviaciones):
     agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, fecha, nombreEse, metrologo)
-    agregar_imagenes_pdf2(img_fondo_path2, os.path.join(output_directory2, certficado + ".pdf"), incertidumbres[errorpos], incertidumbres_expandidas[errorpos])
+    agregar_imagenes_pdf2(img_fondo_path2, os.path.join(output_directory2, certficado + ".pdf"), incertidumbres[errorpos], incertidumbres_expandidas[errorpos], temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica)
     agregar_imagenes_pdf3(img_fondo_path3, os.path.join(output_directory3, certficado + ".pdf"), repetibilidades[errorpos], primeras[errorpos], segundas[errorpos], errores_list[errorpos])
     agregar_imagenes_pdf5(img_fondo_path5, os.path.join(output_directory5, certficado + ".pdf"), notas[errorpos] )
     agregar_imagenes_pdf4(img_fondo_path4, os.path.join(superior_directory, certficado + ".png"), os.path.join(inferior_directory, certficado + ".png"), os.path.join(output_directory4, certficado + ".pdf"), 150, 400, errores_promedio[errorpos], desviaciones[errorpos])

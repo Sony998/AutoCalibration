@@ -18,12 +18,13 @@ def calcular_limites_grafica(datos, error_promedio):
 def generar_grafica_desviacion(archivo_excel):
     fila_inicial = 0
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     while True:
         if fila_inicial >= len(df):
             print("Fin del archivo")
             break
         nocertificado = df.iat[fila_inicial + 2 , 5]
-        nombreEse = str(df.iat[3, 13])
+        nombreEse = dfdatos.iat[3,1]
         patron = df.iloc[fila_inicial + 13, 1:7].astype(int).tolist()
         datos_seleccionados = df.iloc[fila_inicial + 19, 1:7].astype(float) 
         error_promedio = df.iat[fila_inicial + 20, 1]

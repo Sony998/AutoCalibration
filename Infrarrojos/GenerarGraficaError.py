@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import numpy as np
 sheetname = "TERMOMETRO INFRARROJO"
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/SANTANA.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)   
 fila_inicial = 0
 

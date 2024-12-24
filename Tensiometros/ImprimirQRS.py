@@ -5,7 +5,7 @@ from fpdf import FPDF
 
 def generate_pdf_from_images():
     # Directorios a buscar
-    directories = ['OUTPUT/QRS','/home/raven/AutoCalibration/Electrocardiografos/OUTPUT/QRS']
+    directories = ['OUTPUT/QRS']
     output_pdf = 'OUTPUT/Imprimir/QRS.pdf'
 
     images = []
@@ -45,7 +45,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ejecutar scripts en orden con un archivo específico.")
     parser.add_argument(
         "--f", 
-        required=True, 
         help="Especifica el archivo que deben usar los scripts, por ejemplo: Tensiometros.xlsx"
     )
     parser.add_argument(

@@ -9,7 +9,7 @@ import pandas as pd
 sheetname = "TERMOMETRO INFRARROJO"
 
 
-archivo_excel = '/home/raven/Tensiometros.xlsx'
+archivo_excel = '/home/raven/SANTANA.xlsx'
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
 fila_inicial = 0
 desviaciones = []
@@ -74,8 +74,8 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha)
     c.setFont("Arial", 15)
     c.drawString(270, 210, fecha)
     c.drawString(270, 176, fecha)
-    c.drawString(270, 148, "Puerto Boyaca, Boyaca")
-    c.drawString(270, 115, "Ruben Dario Ospina Lagos")
+    c.drawString(270, 148, "Santana, Boyaca")
+    c.drawString(270, 115, "Ingeniera Luz Alejandra Vargas")
     c.save()
 def agregar_imagenes_pdf2(fondo_path, output_pdf_path, nombrecertificado, incertidumbre, incertidumbre_expandida, primera, segunda, errores_list):
     carta_ancho, carta_alto = letter
