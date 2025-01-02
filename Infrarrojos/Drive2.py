@@ -11,7 +11,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 file_urls = []
-folder_id = "1jMKWN1Jg-bOEGqSvrbEMFDgonzE6Z2fg"
+folder_id = "1pTedk8k42hqk0MfzPWrlWfQ9aABZw1P-"
 directory_files = 'OUTPUT/Completos'
 file_names = os.listdir(directory_files)
 print(file_names)
@@ -44,7 +44,7 @@ def ordenarfiles():
     with open("file_urls.json", "r") as f:
         file_data = json.load(f)
     sorted_file_data = dict(
-    sorted(file_data.items(), key=lambda item: int(re.search(r'M(\d{2})', item[0]).group(1)))
+    sorted(file_data.items(), key=lambda item: int(re.search(r'M(\d{2})', item[0]).group(1)) if re.search(r'M(\d{2})', item[0]) else float('inf'))
         )
     with open("file_urls_sorted.json", "w") as f:
         json.dump(sorted_file_data, f, indent=4)

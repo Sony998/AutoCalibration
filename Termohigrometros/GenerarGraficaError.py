@@ -16,11 +16,13 @@ def calcular_limites_grafica(datos):
 
 def generar_grafico_error(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_actual = 0
     while fila_actual < len(df):
-        nombreEse = str(df.iat[3, 15])
+        nombreEse = dfdatos.iat[3, 1]
         nocertificado = df.iat[fila_actual + 2 , 5]
         datospatron = df.iloc[fila_actual + 4, 1:7].astype(float)  # Fila de los datos patrón
+        print(datospatron)
         datos_seleccionados = df.iloc[fila_actual + 7, 1:7].astype(float)  #
         fig, ax = plt.subplots(figsize=(7.04, 4.07))  # Tamaño en pulgadas para obtener 2113x1220 píxeles a 300 DPI
         ax.scatter(datospatron, datos_seleccionados, c='#3d9bff')

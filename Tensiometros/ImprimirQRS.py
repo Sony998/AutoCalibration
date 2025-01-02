@@ -5,7 +5,7 @@ from fpdf import FPDF
 
 def generate_pdf_from_images():
     # Directorios a buscar
-    directories = ['OUTPUT/QRS']
+    directories = ['OUTPUT/QRS','/home/raven/Proyects/AutoCalibration/Pulsoximetros/OUTPUT/QRS']
     output_pdf = 'OUTPUT/Imprimir/QRS.pdf'
 
     images = []

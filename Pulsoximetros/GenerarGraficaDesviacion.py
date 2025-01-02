@@ -2,12 +2,7 @@ import pandas as pd
 import numpy as np
 import os
 import matplotlib.pyplot as plt
-
-sheetname = "PULSO OXIMETRO"
-archivo_excel = '/home/raven/Quipama.xlsx'
-fila_inicial = 0
-df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
-dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
+import argparse
 
 def calcular_limites_grafica(datos, error_promedio):
     error_promedio = abs(error_promedio)
@@ -16,8 +11,9 @@ def calcular_limites_grafica(datos, error_promedio):
     limite_superior = error_max + 1
     limite_inferior = error_min - 1
     return limite_superior, limite_inferior
-nombreEse = dfdatos.iat[3,1]
-def saturacion(fila_inicial):
+
+def saturacion(df, dfdatos, fila_inicial):
+    nombreEse = dfdatos.iat[3,1]
     while fila_inicial < len(df):
         nocertificado = df.iat[fila_inicial + 2, 5]
         datospatron = df.iloc[6, 1:6].astype(int) 
@@ -69,7 +65,8 @@ def saturacion(fila_inicial):
     else:
         print("Graficas de saturacion finalizadas")
 
-def pulso(fila_inicial):
+def pulso(df, dfdatos, fila_inicial):
+    nombreEse = dfdatos.iat[3,1]
     while fila_inicial < len(df):
         nocertificado = df.iat[fila_inicial + 2, 5]
         datospatron = df.iloc[14, 1:6].astype(int) 
@@ -122,5 +119,15 @@ def pulso(fila_inicial):
         print("Graficas de f de pulso finalizadas")
 
 if __name__ == "__main__":
-    saturacion(fila_inicial)
-    pulso(fila_inicial)
+    parser = argparse.ArgumentParser(description="Generar gráficas de desviación.")
+    parser.add_argument('--f', type=str, required=True, help="Nombre del archivo de Excel")
+    args = parser.parse_args()
+
+    archivo_excel = args.f
+    sheetname = "PULSO OXIMETRO"
+    fila_inicial = 0
+    df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
+
+    saturacion(df, dfdatos, fila_inicial)
+    pulso(df, dfdatos, fila_inicial)

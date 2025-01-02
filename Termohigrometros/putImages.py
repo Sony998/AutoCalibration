@@ -45,6 +45,11 @@ def crear_paginas(archivo_excel):
         nombreEse = dfdatos.iat[3,1]
         fecha = dfdatos.iat[4, 1]
         metrologo = dfdatos.iat[7,1]
+        temperaturaminima =dfdatos.iat[10,1]
+        temperaturamaxima = dfdatos.iat[10,2]
+        humedadminima = dfdatos.iat[11,1]
+        humedadmaxima = dfdatos.iat[11,2]
+        presionbarometrica = dfdatos.iat[12,1]
         error_promedio_temperatura = df.iat[fila_inicial + 8, 1]
         desviacionestandar_temperatura = df.iat[fila_inicial + 9, 1]
         errorpromedio_humedad = df.iat[fila_inicial + 14, 1]
@@ -68,7 +73,7 @@ def crear_paginas(archivo_excel):
         notas.append(nota)
         fila_inicial += 18
     for certficado in certificados:
-        agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, fecha, metrologo, nombreEse)
+        agregar_imagenes_pdf1(img_fondo_path1, os.path.join(output_directory1, certficado + ".pdf"), certficado, fecha, metrologo, nombreEse, temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica)
         img_superior_path1 = os.path.join(inferior_directory, certficado + ".png")
         output_pdf_path = os.path.join(output_directory3, certficado + ".pdf")
         agregar_imagenes_pdf2(
@@ -107,7 +112,7 @@ def crear_paginas(archivo_excel):
             os.system("python3 UnirPartes.py")
             break  """
 
-def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha, metrologo, nombreEse):
+def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha, metrologo, nombreEse, temperaturaminima, temperaturamaxima, humedadminima, humedadmaxima, presionbarometrica):
     carta_ancho, carta_alto = letter
     c = canvas.Canvas(output_pdf_path, pagesize=letter)
     c.drawImage(fondo_path, 0, 0, width=carta_ancho, height=carta_alto, preserveAspectRatio=True, mask='auto')
@@ -115,17 +120,17 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha,
     pdfmetrics.registerFont(TTFont('ArialBold', 'Formatos/Fuentes/ArialBold.ttf'))
     pdfmetrics.registerFont(TTFont('ArialI', 'Formatos/Fuentes/ArialI.ttf'))
     c.setFont("ArialI", 14)
-    c.drawString(300, 145, "24")
-    c.drawString(445, 145, "27")
-    c.drawString(360, 115, "1011")
-    c.drawString(300, 85, "52")
-    c.drawString(445, 85, "60")
+    c.drawString(300, 145, str(temperaturaminima) )
+    c.drawString(445, 145, str(temperaturamaxima))
+    c.drawString(360, 115, str(presionbarometrica))
+    c.drawString(300, 85, str(humedadminima))
+    c.drawString(445, 85, str(humedadmaxima))
     c.setFont("ArialI", 12)
     c.drawString(330, 668, nombrecertificado)
     c.setFont("Arial", 12)
     c.drawString(320, 300, fecha)
     c.drawString(320, 276, fecha)
-    c.setFont("Arial", 12)
+    c.setFont("Arial", 9)
     c.drawString(320, 255, nombreEse )
     c.setFont("Arial", 12)
     c.drawString(320, 235, metrologo)

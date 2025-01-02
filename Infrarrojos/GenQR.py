@@ -3,12 +3,19 @@ from PIL import Image, ImageDraw, ImageFont
 import json
 import pandas as pd
 import os
+import argparse
+
+# Configurar argparse para manejar el argumento --f
+parser = argparse.ArgumentParser(description='Generar códigos QR a partir de un archivo Excel.')
+parser.add_argument('--f', type=str, required=True, help='Nombre del archivo Excel')
+args = parser.parse_args()
+
 sheetname = "TERMOMETRO INFRARROJO"
 
 # Cargar archivo Excel
-archivo_excel = '/home/raven/SANTANA.xlsx'
+archivo_excel = args.f
 df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
-
+dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
 # Inicialización
 fila_actual = 0
 output_directory = "OUTPUT/QRS"
@@ -34,7 +41,7 @@ print(f"Certificados y series encontrados: {certificados_series}")
 # Crear imágenes QR solo para los certificados que están en el JSON
 background_template = Image.open("Formatos/Imagenes/backqr.png")
 bg_width, bg_height = background_template.size
-fecha = df.iat[5, 15]
+fecha = dfdatos.iat[4, 1]
 font = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 80)
 font2 = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 50)
 

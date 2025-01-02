@@ -11,7 +11,7 @@ SCOPES = ["https://www.googleapis.com/auth/drive"]
 
 service = Create_Service(CLIENT_SECRET_FILE, API_NAME, API_VERSION, SCOPES)
 file_urls = []
-folder_id = "1C9dnwgMgsT1oL74XZAMuBOI5ZoKtssjd"
+folder_id = "1yF9vGd4kjLMf5JMsIaork4ErmjVkyDHw"
 directory_files = 'OUTPUT/Completos'
 file_names = os.listdir(directory_files)
 print(file_names)

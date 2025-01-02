@@ -29,27 +29,31 @@ def create_pdf(output_path, background_image_path, text_data, certificado):
     c.save()
 def generar_certificado(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
     while True:
         if fila_inicial >= len(df):
             print("Fin del archivo")
             break
         else:
+            
             certificado = df.iat[fila_inicial + 2, 5]
             output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
             background_image_path = "Formatos/Imagenes/backCertificado.png"
             tipo = sheetname
-            if pd.isna(df.iat[fila_inicial + 1, 7]):
+            if 7 < len(df.columns) and pd.isna(df.iat[fila_inicial + 1, 7]):
                 inventario = "N.R"
-            else:
+            elif 7 < len(df.columns):
                 inventario = df.iat[fila_inicial + 1, 7]
+            else:
+                inventario = "N.R"
             marca = df.iat[fila_inicial + 1, 1] if pd.notna(df.iat[fila_inicial + 1, 1]) else "N.R"
             modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
             serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
             ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
-            nombreEse = df.iat[3, 15]
-            fecha = df.iat[5, 15]
-            direccion = df.iat[7, 15]
+            nombreEse = dfdatos.iat[3,1]
+            fecha = dfdatos.iat[4, 1]
+            direccion = dfdatos.iat[6, 1]
             text_data = {
                 (315, 595): ["TEMPERATURA Y HUMEDAD RELATIVA"],
                 (315, 575): [tipo],

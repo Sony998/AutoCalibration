@@ -2,11 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 import numpy as np
-sheetname = "PULSO OXIMETRO"
-archivo_excel = '/home/raven/Quipama.xlsx'
-df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)   
-dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
-fila_inicial = 0
+import argparse
 
 def calcular_limites_grafica(datos):
     error_max = datos.max() + 1
@@ -14,11 +10,12 @@ def calcular_limites_grafica(datos):
     limite_superior = error_max
     limite_inferior = error_min
     return limite_superior, limite_inferior
-nombreEse = dfdatos.iat[3,1]
-def saturacion(fila_inicial):
+
+def saturacion(df, dfdatos, fila_inicial):
+    nombreEse = dfdatos.iat[3, 1]
     while fila_inicial < len(df):
         nocertificado = df.iat[fila_inicial + 2, 5]
-        datospatron = df.iloc[6, 1:6].astype(int) 
+        datospatron = df.iloc[6, 1:6].astype(int)
         datos_seleccionados = df.iloc[fila_inicial + 8, 1:6].astype(float)  # Fila de los datos seleccionados
         print("Creando", nocertificado)
         fig, ax = plt.subplots(figsize=(7.04, 4.07))  # Tamaño en pulgadas para obtener 2113x1220 píxeles a 300 DPI
@@ -32,7 +29,7 @@ def saturacion(fila_inicial):
             str(nombreEse) + " - " + str(nocertificado),
             fontsize=10,
             fontweight="bold",
-        )   
+        )
         output_dir = "OUTPUT/Graficos/Saturacion/Error"
         os.makedirs(output_dir, exist_ok=True)
         plt.savefig(f"{output_dir}/{nocertificado}.png", dpi=300, bbox_inches='tight')
@@ -41,11 +38,12 @@ def saturacion(fila_inicial):
     else:
         print("Graficas de saturacion finalizadas")
 
-def pulso(fila_inicial):
+def pulso(df, dfdatos, fila_inicial):
+    nombreEse = dfdatos.iat[3, 1]
     while fila_inicial < len(df):
         nocertificado = df.iat[fila_inicial + 2, 5]
-        datospatron = df.iloc[14, 1:6].astype(int) 
-        datos_seleccionados = df.iloc[fila_inicial + 8, 1:6].astype(float)   # Fila de los datos seleccionados
+        datospatron = df.iloc[14, 1:6].astype(int)
+        datos_seleccionados = df.iloc[fila_inicial + 8, 1:6].astype(float)  # Fila de los datos seleccionados
         print("Creando", nocertificado)
         fig, ax = plt.subplots(figsize=(7.04, 4.07))  # Tamaño en pulgadas para obtener 2113x1220 píxeles a 300 DPI
         ax.scatter(datospatron, datos_seleccionados, c='#3d9bff')
@@ -58,7 +56,7 @@ def pulso(fila_inicial):
             str(nombreEse) + " - " + str(nocertificado),
             fontsize=10,
             fontweight="bold",
-        )   
+        )
         output_dir = "OUTPUT/Graficos/Pulso/Error"
         os.makedirs(output_dir, exist_ok=True)
         plt.savefig(f"{output_dir}/{nocertificado}.png", dpi=300, bbox_inches='tight')
@@ -68,5 +66,15 @@ def pulso(fila_inicial):
         print("Graficas de pulso terminadas")
 
 if __name__ == '__main__':
-    saturacion(fila_inicial)
-    pulso(fila_inicial)
+    parser = argparse.ArgumentParser(description='Generar graficas de error para pulsoximetros.')
+    parser.add_argument('--f', type=str, required=True, help='Nombre del archivo de Excel')
+    args = parser.parse_args()
+
+    archivo_excel = args.f
+    sheetname = "PULSO OXIMETRO"
+    df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
+    fila_inicial = 0
+
+    saturacion(df, dfdatos, fila_inicial)
+    pulso(df, dfdatos, fila_inicial)

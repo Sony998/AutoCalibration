@@ -17,8 +17,6 @@ def create_pdf(output_path, background_image_path, text_data, certificado):
     c.setFont("Fraunces", 18)
     c.setFillColor("#d7a534")
     c.drawString(265, 647, certificado)
-    
-    # Dibujar el resto de los datos
     for position, texts in text_data.items():
         x, y = position
         c.setFont("Arial", 10)
@@ -29,42 +27,45 @@ def create_pdf(output_path, background_image_path, text_data, certificado):
     c.save()
 def generar_certificado(archivo_excel):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
+    dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
+    print(df)
     fila_inicial = 0
     while True:
-            certificado = df.iat[fila_inicial + 2, 5]
-            output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
-            background_image_path = "Formatos/Imagenes/backCertificado.png"
-            tipo = sheetname
-            if pd.isna(df.iat[fila_inicial + 1, 7]):
-                inventario = "N.R"
+            if fila_inicial >= len(df):
+                print("Fin del archivo")
+                break
             else:
-                inventario = df.iat[fila_inicial + 1, 7]
-            marca = df.iat[fila_inicial + 1, 1] if pd.notna(df.iat[fila_inicial + 1, 1]) else "N.R"
-            modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
-            serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
-            ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
-            nombreEse = df.iat[3, 15]
-            fecha = df.iat[5, 15]
-            direccion = df.iat[7, 15]
-            text_data = {
-                (315, 595): ["TEMPERATURA"],
-                (315, 575): [tipo],
-                (315, 555): [marca],
-                (315, 535): [modelo],
-                (315, 515): [serie],
-                (315, 495): [inventario],
-                (315, 475): ["°C"],
-                (315, 455): ["0.1 °C"],
-                (315, 435): ["16.64 - 37.21"],
-                (315, 390): [nombreEse],
-                (315, 370): [direccion],
-                (315, 350): [ubicacion],
-                (315, 330): [fecha],
-                (315, 310): ["5"]
-            }
-            create_pdf(output_path, background_image_path, text_data, certificado)
-            print("El certificado" + certificado + " ha sido creado")
-            fila_inicial += 13
+                nombreEse = dfdatos.iat[3,1]
+                fecha = dfdatos.iat[4, 1]
+                direccion = dfdatos.iat[6, 1]
+                certificado = df.iat[fila_inicial + 2, 5]
+                output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
+                background_image_path = "Formatos/Imagenes/backCertificado.png"
+                tipo = sheetname
+                inventario = df.iat[fila_inicial + 1, 7] if 7 < len(df.columns) and pd.notna(df.iat[fila_inicial + 1, 7]) else "N.R"
+                marca = df.iat[fila_inicial + 1, 1] if pd.notna(df.iat[fila_inicial + 1, 1]) else "N.R"
+                modelo = df.iat[fila_inicial + 2, 1] if pd.notna(df.iat[fila_inicial + 2, 1]) else "N.R"
+                serie = df.iat[fila_inicial + 1, 3] if pd.notna(df.iat[fila_inicial + 1, 3]) else "N.R"
+                ubicacion = df.iat[fila_inicial + 2, 3] if pd.notna(df.iat[fila_inicial + 2, 3]) else "N.R"
+                text_data = {
+                    (315, 595): ["TEMPERATURA"],
+                    (315, 575): [tipo],
+                    (315, 555): [marca],
+                    (315, 535): [modelo],
+                    (315, 515): [serie],
+                    (315, 495): [inventario],
+                    (315, 475): ["°C"],
+                    (315, 455): ["0.1 °C"],
+                    (315, 435): ["16.64 - 37.21"],
+                    (315, 390): [nombreEse],
+                    (315, 370): [direccion],
+                    (315, 350): [ubicacion],
+                    (315, 330): [fecha],
+                    (315, 310): ["5"]
+                }
+                create_pdf(output_path, background_image_path, text_data, certificado)
+                print("El certificado" + certificado + " ha sido creado")
+                fila_inicial += 13
 
 def main():
     parser = argparse.ArgumentParser(description="Generar certificado a partir de un archivo Excel.")

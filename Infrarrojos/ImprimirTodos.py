@@ -7,6 +7,6 @@ for folder in folders:
         if filename.endswith(".pdf"):
             merger.append(os.path.join(folder, filename))
 
-output_path = os.path.join("OUTPUT/Imprimir/", "Tensiometros.pdf")
+output_path = os.path.join("OUTPUT/Imprimir/", "Infrarrojos.pdf")
 with open(output_path, "wb") as f_out:
     merger.write(f_out)

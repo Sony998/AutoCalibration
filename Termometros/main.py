@@ -10,8 +10,6 @@ scripts_generacion = [
     "UnirPartes.py",
     "Drive2.py",
     "GenQR.py",
-    "ImprimirTodos.py",
-    "ImprimirQRS.py"
 ]
 def main(file_name, folder_name):
     print(f"Iniciando ejecución de scripts con el archivo: {file_name}")
