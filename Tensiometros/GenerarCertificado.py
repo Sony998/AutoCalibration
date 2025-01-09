@@ -27,7 +27,7 @@ def create_pdf(output_path, background_image_path, text_data, certificado):
             c.drawString(x, y - i * 15, str(text))  # Ajusta la separación vertical
     
     c.save()
-def generar_certificado(archivo_excel):
+def generar_certificado(archivo_excel, formatometrologo):
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
     dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
     fila_inicial = 0
@@ -41,7 +41,7 @@ def generar_certificado(archivo_excel):
             direccion = dfdatos.iat[6, 1]
             certificado = df.iat[fila_inicial + 2, 5]
             output_path = "OUTPUT/Certificados/" + certificado + ".pdf"
-            background_image_path = "Formatos/Imagenes/backCertificado.png"
+            background_image_path = "../Metrologos/" + formatometrologo + ".png"
             tipo = sheetname
             if pd.isna(df.iat[fila_inicial + 1, 7]):
                 inventario = "N.R"
@@ -79,15 +79,15 @@ def main():
         help="Especifica el archivo Excel que se debe usar, por ejemplo: Tensiometros.xlsx"
     )
     parser.add_argument(
-        "--c", 
-        nargs="+", 
-        help="Especifica el nombre de la nueva carpeta de drive"
+        "--m", 
+        required=True, 
+        help="Se requiere especificar el nombre del metrologo (Ruben o Luz)"
     )
     args = parser.parse_args()
     if not args.f:
         print("Error: No se ha proporcionado un archivo Excel. Por favor, use el argumento --f para especificar el archivo.")
     else:
-        generar_certificado(args.f)
+        generar_certificado(args.f, args.m)
 
 if __name__ == "__main__":
     main()

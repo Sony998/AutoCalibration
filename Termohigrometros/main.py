@@ -7,16 +7,25 @@ scripts_generacion = [
     "GenerarGraficaError.py",
     "GenerarGraficaDesviacion.py",
     "putImages.py",
-    "UnirPartes.py",
-    "Drive2.py",
-    "GenQR.py",
+    #"UnirPartes.py",
+    #"Drive2.py",
+    #"GenQR.py",
     "ImprimirTodos.py",
-    "ImprimirQRS.py"
+    #"ImprimirQRS.py"
 ]
-def main(file_name, folder_name):
+def main(file_name, metrologo):
     print(f"Iniciando ejecución de scripts con el archivo: {file_name}")
     for script in scripts_generacion:
         try:
+            if script == "GenerarCertificado.py":
+                print(f"Ejecutando {script} con el archivo: {file_name}")
+                subprocess.run(
+                    ["python3", script, "--f", file_name, "--m", metrologo],
+                    check=True,
+                    text=True
+                )
+                print(f"{script} ejecutado con éxito.")
+                continue
             if script == "Drive2.py":
                 print(f"Ejecutando {script} con el archivo: {file_name}")
                 subprocess.run(
@@ -37,7 +46,7 @@ def main(file_name, folder_name):
                 continue
             print(f"Ejecutando {script} con el archivo: {file_name}")
             result = subprocess.run(
-                ["python3", script, "--f", file_name, "--c", " ".join(folder_name)],
+                ["python3", script, "--f", file_name],
                 check=True,
                 text=True
             )
@@ -54,9 +63,9 @@ if __name__ == "__main__":
         help="Especifica el archivo que deben usar los scripts, por ejemplo: Tensiometros.xlsx"
     )
     parser.add_argument(
-        "--c", 
-        nargs="+", 
-        help="Especifica el nombre de la nueva carpeta de drive"
+        "--m", 
+        required=True,
+        help="Especifica el metrologo, por ejemplo: (Ruben, Luz)"
     )
     args = parser.parse_args()
     main(args.f, args.c)

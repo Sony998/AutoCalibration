@@ -12,11 +12,8 @@ def generate_pdf_from_images():
         qrs_path = os.path.join(directory, 'OUTPUT/QRS')
         if os.path.isdir(qrs_path) and any(os.path.isfile(os.path.join(qrs_path, f)) for f in os.listdir(qrs_path)):
             directories.append(qrs_path)
-
-
-
     print("Generando PDF con imágenes de QRS", directories)
-    output_pdf = 'ImprimirQRS/QRS.pdf'
+    output_pdf = 'Para Imprimir/QRS/QRSCompletos.pdf'
 
     images = []
     for directory in directories:

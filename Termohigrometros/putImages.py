@@ -101,7 +101,10 @@ def crear_paginas(archivo_excel):
             notas[errorpos] 
         )
         errorpos += 1
-
+        if errorpos >= len(certificados):
+            print("Se han creado todos los reportes.")
+            os.system("python3 UnirPartes.py")
+            break
 """         agregar_imagenes_pdf2(img_fondo_path2, os.path.join(output_directory2, certficado + ".pdf"), certficado, incertidumbres[errorpos], incertidumbres_expandidas[errorpos], primeras[errorpos], segundas[errorpos], errores_list[errorpos])
         agregar_imagenes_pdf3(img_fondo_path3, img_superior_path1, img_superior_path2, output_pdf_path, 
                             yinferior=125, ysuperior=378, error_promedio=errores_promedio[errorpos], desviacion=desviaciones[errorpos])
