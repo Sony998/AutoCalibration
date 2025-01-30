@@ -4,7 +4,7 @@ import os
 import numpy as np
 import argparse
 
-sheetname = "INCUBADORA NEONATAL"
+sheetname = "SERVOCUNA"
 
 def calcular_limites_grafica(datos):
     error_max = datos.max() + 0.5
@@ -21,12 +21,12 @@ def generar_grafico_error_lux(archivo_excel):
             break
         nombreEse = dfdatos.iat[3, 1]
         nocertificado = df.iat[fila_inicial + 2 , 5]
-        datospatron = df.iloc[fila_inicial+4,1:18].astype(float)  # Fila de los datos patron
-        datos_seleccionados = df.iloc[fila_inicial+6,1:18].astype(float)
+        datospatron = df.iloc[fila_inicial+4,1:11].astype(float)  # Fila de los datos patron
+        datos_seleccionados = df.iloc[fila_inicial+6,1:11].astype(float)
         print(datospatron)  # Fila de los datos seleccionados
         fig, ax = plt.subplots(figsize=(7.04, 4.07))  # Tamaño en pulgadas para obtener 2113x1220 píxeles a 300 DPI
         ax.scatter(datospatron, datos_seleccionados)
-        ax.set_xticks(np.arange(min(datospatron), max(datospatron) + 1), 0.5)
+        ax.set_xticks(np.arange(min(datospatron), max(datospatron) + 1))
         ax.set_ylim(calcular_limites_grafica(datos_seleccionados))
         ax.grid(True, which='both', linestyle='--', linewidth=0.5)
         ax.set_xlabel('PATRON')

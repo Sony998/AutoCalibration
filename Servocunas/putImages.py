@@ -7,7 +7,7 @@ from reportlab.pdfbase.ttfonts import TTFont
 from reportlab.pdfbase import pdfmetrics
 import pandas as pd
 import argparse
-sheetname = "INCUBADORA NEONATAL"
+sheetname = "SERVOCUNA"
 desviaciones = []
 certificados = []
 errores_list = []
@@ -58,12 +58,12 @@ def crear_paginas(archivo_excel):
         humedadmaxima = dfdatos.iat[11,2]
         presionbarometrica = dfdatos.iat[12,1]
         desviacionestandar = df.iat[fila_inicial + 8, 1]
-        primerpatron = df.iloc[fila_inicial + 4,1:9].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
+        primerpatron = df.iloc[fila_inicial + 4,1:6].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
         print(primerpatron)
-        segundopatron = df.iloc[fila_inicial + 4, 9:18].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
+        segundopatron = df.iloc[fila_inicial + 4, 6:11].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
         print(segundopatron)
-        primera = df.iloc[fila_inicial + 5, 1:9].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
-        segunda = df.iloc[fila_inicial + 5, 9:18].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
+        primera = df.iloc[fila_inicial + 5, 1:6].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
+        segunda = df.iloc[fila_inicial + 5, 6:11].apply(lambda x: str(x) if x == "N.R" else float(x)).tolist()
 
         incertidumbre = df.iat[fila_inicial + 9, 1]
         incertidumbre_expandida = df.iat[fila_inicial + 10, 1]
@@ -108,14 +108,14 @@ def agregar_imagenes_pdf1(fondo_path, output_pdf_path, nombrecertificado, fecha,
     pdfmetrics.registerFont(TTFont('ArialBold', 'Formatos/Fuentes/ArialBold.ttf'))
     pdfmetrics.registerFont(TTFont('ArialI', 'Formatos/Fuentes/ArialI.ttf'))
     c.setFont("ArialI", 12)
-    c.drawString(305, 668, nombrecertificado)
+    c.drawString(325, 668, nombrecertificado)
     c.setFont("Arial", 15)
-    c.drawString(320, 265, fecha)
-    c.drawString(320, 235, fecha)
+    c.drawString(270, 255, fecha)
+    c.drawString(270, 220, fecha)
     c.setFont("Arial", 10)
-    c.drawString(320, 210, nombreEse)
+    c.drawString(270, 190, nombreEse)
     c.setFont("Arial", 15)
-    c.drawString(320, 180, metrologo)
+    c.drawString(270, 150, metrologo)
     c.save()
 def agregar_imagenes_pdf2(fondo_path, output_pdf_path, temperaturaminima, temperaturamaxima, presionbarometrica, humedadminima, humedadmaxima, temperatura_calibracion, humedad_calibracion, incertidumbre, incertidumbre_expandida):
     carta_ancho, carta_alto = letter
@@ -130,10 +130,10 @@ def agregar_imagenes_pdf2(fondo_path, output_pdf_path, temperaturaminima, temper
     c.drawString(370, 625, str(presionbarometrica))
     c.drawString(325, 600, str(humedadminima))
     c.drawString(438, 600, str(humedadmaxima))
-    c.drawString(400, 520, str(temperatura_calibracion))
-    c.drawString(400, 490, str(humedad_calibracion) + "%")
-    c.drawString(400, 300, str(incertidumbre_expandida))
-    c.drawString(400, 275, str(incertidumbre))
+    c.drawString(400, 505, str(temperatura_calibracion))
+    c.drawString(400, 470, str(humedad_calibracion) + "%")
+    c.drawString(400, 280, str(incertidumbre_expandida))
+    c.drawString(400, 255, str(incertidumbre))
     c.save()
 
 def agregar_imagenes_pdf3(fondo_path, output_pdf_path, error_promedio, desviacion, primerpatron, segundopatron, primera, segunda):
@@ -143,16 +143,16 @@ def agregar_imagenes_pdf3(fondo_path, output_pdf_path, error_promedio, desviacio
     pdfmetrics.registerFont(TTFont('Arial', 'Formatos/Fuentes/Arial.ttf'))
     pdfmetrics.registerFont(TTFont('ArialBold', 'Formatos/Fuentes/ArialBold.ttf'))
     c.setFont("Arial", 11)
-    c.drawString(400, 290, str(error_promedio))
-    c.drawString(400, 250, str(desviacion))
-    for i in range(8):
-        c.drawString(205 + (i * 42), 570, str(primerpatron[i]))
-    for i in range(8):
-        c.drawString(205 + (i * 42), 545, str(primera[i]))
-    for i in range(8):
-        c.drawString(205 + (i * 42), 470, str(segundopatron[i]))
-    for i in range(8):
-        c.drawString(205 + (i * 42), 445, str(segunda[i]))
+    c.drawString(370, 250, str(error_promedio))
+    c.drawString(370, 210, str(desviacion))
+    for i in range(5):
+        c.drawString(250 + (i * 50), 530, str(primerpatron[i]))
+    for i in range(5):
+        c.drawString(250 + (i * 50), 500, str(primera[i]))
+    for i in range(5):
+        c.drawString(250 + (i * 50), 430, str(segundopatron[i]))
+    for i in range(5):
+        c.drawString(250 + (i * 50), 400, str(segunda[i]))
     c.save()
 def agregar_imagenes_pdf4(img_fondo_path, img_superior_path1, img_superior_path2, output_pdf_path, yinferior, ysuperior, error_promedio, desviacion):
     img_fondo = Image.open(img_fondo_path).convert("RGBA")
@@ -172,7 +172,6 @@ def agregar_imagenes_pdf4(img_fondo_path, img_superior_path1, img_superior_path2
     c.drawImage(img_superior_path2, xsuperior, ysuperior, width=image_inferior.width, height=image_inferior.height)
     pdfmetrics.registerFont(TTFont('Arial', 'Formatos/Fuentes/Arial.ttf'))
     c.setFont("Arial", 11)
-
     c.save()
 
 

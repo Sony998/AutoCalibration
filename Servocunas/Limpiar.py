@@ -10,6 +10,7 @@ directories_for_clean = [
                         "OUTPUT/Reportes/2",
                         "OUTPUT/Reportes/3",
                         "OUTPUT/Reportes/4",
+                        "OUTPUT/Reportes/5",
                         "OUTPUT/QRS",
                         "OUTPUT/Imprimir"
                         ]

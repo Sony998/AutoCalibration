@@ -5,7 +5,7 @@ import json
 import pandas as pd
 import os
 def main(archivo_excel):
-    sheetname = "LAMPARA DE FOTOCURADO"
+    sheetname = "SERVOCUNA"
     output_directory = "OUTPUT/QRS"
     df = pd.read_excel(archivo_excel, sheet_name=sheetname, header=None)
     dfdatos = pd.read_excel(archivo_excel, sheet_name="DATOS SOLICITANTE", header=None)
@@ -20,7 +20,7 @@ def main(archivo_excel):
         certificado = df.iat[fila_actual + 2 , 5]
         serie = str(df.iat[fila_actual + 1, 3])
         certificados_series.append((certificado, serie))
-        fila_actual += 18
+        fila_actual += 11
     print(f"Certificados y series encontrados: {certificados_series}")
     background_template = Image.open("Formatos/Imagenes/backqr.png")
     bg_width, bg_height = background_template.size

@@ -24,6 +24,43 @@ def browse_file(entry):
         entry.insert(0, selected_file_path)
         print(selected_file_path)
 
+def search_in_directories_on_start(directorio_base):
+    for root, dirs, files in os.walk(directorio_base):
+        for dir_name in dirs:
+            if dir_name == 'Completos':
+                output_dir = os.path.join(root, dir_name)  # Directorio completo
+                parent_dir = os.path.basename(os.path.dirname(root))  # Nombre corto
+                if not os.listdir(output_dir):
+                    nothing = True
+                else:
+                    directorios_found_list.append(parent_dir)
+    print(f"Directorios con equipos encontrados: {directorios_found_list}\n")
+
+
+def upload_files(directorio):
+    with open("folder_id.json", "r") as f:
+        folder_ids = json.load(f)
+    
+    if directorio in folder_ids:
+        folder_id = folder_ids[directorio]
+        os.chdir(directorio)
+        print(directorio, folder_id)
+        command = ["python3", "Drive2.py", "--i", folder_id, "--f", selected_file_path]
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for line in iter(process.stdout.readline, ''):
+            output_text.insert(tk.END, line)
+            output_text.see(tk.END)
+        process.stdout.close()
+        process.wait()
+        os.chdir(directorio_base)
+        if process.returncode != 0:
+            errors = process.stderr.read()
+            output_text.insert(tk.END, f"\nErrores:\n{errors}")
+            output_text.see(tk.END)
+    else:
+        output_text.insert(tk.END, f"Error: No se encontró el ID para el directorio '{directorio}' en folder_id.json\n")
+        output_text.see(tk.END)
+
 
 def search_in_directories(directorio_base):
     output_text.delete(1.0, tk.END)  # Limpia el área de salida antes de iniciar
@@ -40,6 +77,12 @@ def search_in_directories(directorio_base):
     output_text.see(tk.END)
     create_folder_padre(entry_drive_folder.get())
 
+def upload_all_files():
+    output_text.delete(1.0, tk.END)  # Limpia el área de salida antes de iniciar
+    for directorio in directorios_found_list:
+        upload_files(directorio)
+    output_text.insert(tk.END, "Todos los equipos han sido subidos a su carpeta correspondiente\n")
+    output_text.see(tk.END)
 
 def create_folder_padre(nombre_carpeta):
     """Crear carpeta padre"""
@@ -118,6 +161,44 @@ def on_metrologo_select(*args):
 
 def get_drive_folder_text():
     return entry_drive_folder.get()
+def eliminar_equipos_generados():
+    def run_command():
+        command = ["python3", "LimpiarTodo.py"]
+        output_text.delete(1.0, tk.END)
+        output_text.insert(tk.END, "Empezando a eliminar los equipos generados...\n")
+        output_text.see(tk.END)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for line in iter(process.stdout.readline, ''):
+            output_text.insert(tk.END, line)
+            output_text.see(tk.END)
+        process.stdout.close()
+        process.wait()
+        if process.returncode != 0:
+            errors = process.stderr.read()
+            output_text.insert(tk.END, f"\nErrores:\n{errors}")
+            output_text.see(tk.END)
+    threading.Thread(target=run_command).start()
+
+
+def create_folders():
+    def run_command():
+        command = ["python3", "CrearCarpetas.py"]
+        output_text.delete(1.0, tk.END)  # Limpia el área de salida antes de iniciar
+        output_text.insert(tk.END, "Empezando a crear las carpetas...\n")
+        output_text.see(tk.END)
+        process = subprocess.Popen(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+        for line in iter(process.stdout.readline, ''):
+            output_text.insert(tk.END, line)  # Añade la línea al área de texto
+            output_text.see(tk.END)  # Auto-scroll al final
+        process.stdout.close()
+        process.wait()  # Esperar a que el proceso termine
+        if process.returncode != 0:
+            errors = process.stderr.read()
+            output_text.insert(tk.END, f"\nErrores:\n{errors}")
+            output_text.see(tk.END)
+    threading.Thread(target=run_command).start()
+
+
 
 def start_generation():
     def run_command():
@@ -155,6 +236,7 @@ def start_generation():
             output_text.see(tk.END)  # Auto-scroll al final
         process.stdout.close()
         process.wait()  # Esperar a que el proceso termine
+        output_text.insert(tk.END, "Reportes generados para el grupo de", selected_var.get(), "por favor verificar que los documentos se han generado correctamente antes de subirlos, los documentos se encuentran en la carpeta Para Imprimir/Certificados/", selected_var.get())
         os.chdir(directorio_base)
         if process.returncode != 0:
             errors = process.stderr.read()
@@ -166,6 +248,7 @@ def start_generation():
 
 def main():
     global selected_var, selected_var_metrologo, entry_drive_folder, options, output_text
+    search_in_directories_on_start(directorio_base)
     root = tk.Tk()
     root.title("Generacion de reportes de calibracion Ruben Ospina")
     root.geometry("700x500")
@@ -202,10 +285,16 @@ def main():
     label_drive_folder.pack(pady=5)
     entry_drive_folder = tk.Entry(root, width=90)
     entry_drive_folder.pack(pady=5)
+    create_folders_button = tk.Button(root, text="Crear carpetas de cada equipo encontrado", command=lambda: create_folders())
+    create_folders_button.pack(pady=10)
     save_button = tk.Button(root, text="Crear carpeta de drive con las carpetas de cada equipo", command=lambda: search_in_directories(directorio_base))
     save_button.pack(pady=10)
+    upload_button = tk.Button(root, text="Subir todos los equipos en su carpeta", command=lambda: upload_all_files())
+    upload_button.pack(pady=10)
     genqr_button = tk.Button(root, text="Generar pdf con todos los QR", command=lambda: start_qr_pdf_generation())
     genqr_button.pack(pady=10)
+    delete_all_button = tk.Button(root, text="Eliminar equipos generados", command=lambda: eliminar_equipos_generados())
+    delete_all_button.pack(pady=10)
     output_text = tk.Text(root, wrap=tk.WORD, height=15, width=90)
     output_text.pack(pady=10)
 

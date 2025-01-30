@@ -10,7 +10,7 @@ scripts_generacion = [
     "UnirPartes.py",
  #   "Drive.py",
   #  "GenQR.py",
-   # "ImprimirTodos.py",
+    "ImprimirTodos.py",
    # "ImprimirQRS.py"
 ]
 def main(file_name, metrologo):
