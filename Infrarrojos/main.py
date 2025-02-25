@@ -8,28 +8,16 @@ scripts_generacion = [
     "GenerarGraficaDesviacion.py",
     "putImages.py",
     "UnirPartes.py",
-    "Drive2.py",
-    "GenQR.py",
-    # "ImprimirTodos.py",
-    # "ImprimirQRS.py"
+    "ImprimirTodos.py",
 ]
-def main(file_name, folder_name):
+def main(file_name, metrologo):
     print(f"Iniciando ejecución de scripts con el archivo: {file_name}")
     for script in scripts_generacion:
         try:
-            if script == "Drive2.py":
+            if script == "GenerarCertificado.py":
                 print(f"Ejecutando {script} con el archivo: {file_name}")
                 subprocess.run(
-                    ["python3", script],
-                    check=True,
-                    text=True
-                )
-                print(f"{script} ejecutado con éxito.")
-                continue
-            elif script == "GenQR.py":
-                print(f"Ejecutando {script} con el archivo: {file_name}")
-                subprocess.run(
-                    ["python3", script, "--f", file_name],
+                    ["python3", script, "--f", file_name, "--m", metrologo],
                     check=True,
                     text=True
                 )
@@ -37,7 +25,7 @@ def main(file_name, folder_name):
                 continue
             print(f"Ejecutando {script} con el archivo: {file_name}")
             result = subprocess.run(
-                ["python3", script, "--f", file_name, "--c", " ".join(folder_name)],
+                ["python3", script, "--f", file_name],
                 check=True,
                 text=True
             )
@@ -45,7 +33,7 @@ def main(file_name, folder_name):
         except subprocess.CalledProcessError as e:
             print(f"Error al ejecutar {script}: {e}")
             break
-    print("Ejecución completada en todo el proceso puede generar los reportes para otro tipo de equipo!!!.") 
+    print("Ejecución completada en todo el proceso puede generar los reportes para otro tipo de equipo!!!.")  
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Ejecutar scripts en orden con un archivo específico.")
     parser.add_argument(
@@ -54,9 +42,9 @@ if __name__ == "__main__":
         help="Especifica el archivo que deben usar los scripts, por ejemplo: Tensiometros.xlsx"
     )
     parser.add_argument(
-        "--c", 
-        nargs="+", 
+        "--m", 
+        required=True,
         help="Especifica el nombre de la nueva carpeta de drive"
     )
     args = parser.parse_args()
-    main(args.f, args.c)
+    main(args.f, args.m)

@@ -42,8 +42,8 @@ print(f"Certificados y series encontrados: {certificados_series}")
 background_template = Image.open("Formatos/Imagenes/backqr.png")
 bg_width, bg_height = background_template.size
 fecha = dfdatos.iat[4, 1]
-font = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 80)
-font2 = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 50)
+font = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 95)
+font2 = ImageFont.truetype("Formatos/Fuentes/Arial.ttf", 70)
 
 for certificado, serie in certificados_series:
     if certificado in data:
@@ -66,9 +66,9 @@ for certificado, serie in certificados_series:
         draw = ImageDraw.Draw(background)
 
         # Añadir el texto del certificado, fecha y serie
-        draw.text((130, 580), certificado, font=font, fill="white")
-        draw.text((210, 722), str(fecha), font=font2, fill="white")
-        draw.text((200, 815), serie, font=font2, fill="white")
+        draw.text((120, 515), certificado, font=font, fill="white")
+        draw.text((250, 660), fecha, font=font2, fill="white")
+        draw.text((240, 780), str(serie), font=font2, fill="white")
 
         # Añadir el código QR
         qr_width, qr_height = qr_image.size

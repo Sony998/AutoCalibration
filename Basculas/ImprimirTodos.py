@@ -8,7 +8,7 @@ def obtener_archivos_pdf():
         for filename in os.listdir(folder):
             if filename.endswith(".pdf"):
                 merger.append(os.path.join(folder, filename))
-    output_path = os.path.join("OUTPUT/Imprimir/", "BasculasDePiso.pdf")
+    output_path = os.path.join("../Para Imprimir/Certificados", "BasculasdePiso.pdf")
     with open(output_path, "wb") as f_out:
         merger.write(f_out)
 

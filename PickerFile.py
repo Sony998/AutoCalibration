@@ -70,7 +70,8 @@ def search_in_directories(directorio_base):
                 if not os.listdir(output_dir):
                     nothing = True
                 else:
-                    directorios_found_list.append(parent_dir)
+                    if parent_dir not in directorios_found_list:
+                        directorios_found_list.append(parent_dir)
     output_text.insert(tk.END, f"Directorios con equipos encontrados: {directorios_found_list}\n")
     output_text.see(tk.END)
     create_folder_padre(entry_drive_folder.get())
@@ -249,6 +250,7 @@ def main():
     # Crear un canvas y un frame para el contenido
     canvas = tk.Canvas(root)
     scrollbar = tk.Scrollbar(root, orient="vertical", command=canvas.yview)
+    scrollbar_horizontal = tk.Scrollbar(root, orient="horizontal", command=canvas.xview)
     scrollable_frame = tk.Frame(canvas)
 
     scrollable_frame.bind(
@@ -259,62 +261,63 @@ def main():
     )
 
     canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
-    canvas.configure(yscrollcommand=scrollbar.set)
+    canvas.configure(yscrollcommand=scrollbar.set, xscrollcommand=scrollbar_horizontal.set)
 
-    # Colocar el canvas y el scrollbar en la ventana principal
+    # Colocar el canvas y los scrollbars en la ventana principal
     canvas.pack(side="left", fill="both", expand=True)
     scrollbar.pack(side="right", fill="y")
+    scrollbar_horizontal.pack(side="bottom", fill="x")
 
     # Añadir widgets al frame scrollable
     label_file = tk.Label(scrollable_frame, text="Selecciona el archivo excel:")
-    label_file.pack(pady=5)
+    label_file.pack(pady=5, anchor="center")
     entry = tk.Entry(scrollable_frame, width=60)
-    entry.pack(pady=5)
+    entry.pack(pady=5, anchor="center")
     browse_button = tk.Button(scrollable_frame, text="Abrir archivo", command=lambda: browse_file(entry))
-    browse_button.pack(pady=10)
+    browse_button.pack(pady=10, anchor="center")
 
     label_picker = tk.Label(scrollable_frame, text="Selecciona un tipo de equipo para generar los certificados:")
-    label_picker.pack(pady=10)
-    options = ["Presiona aqui", "Pulsoximetros", "Tensiometros", "Monitores de signos", "Tensiometro digital",
+    label_picker.pack(pady=10, anchor="center")
+    options = ["Presiona aqui", "Pulsoximetros","Infrarrojos", "Basculas", "PesaBebe" ,"Tensiometros", "Monitores de signos", "Tensiometro digital",
                "Lamparas Fotocurado"]
     selected_var = tk.StringVar(scrollable_frame)
     selected_var.set(options[0]) 
     option_menu = tk.OptionMenu(scrollable_frame, selected_var, *options, command=on_option_select)
-    option_menu.pack(pady=5)
+    option_menu.pack(pady=5, anchor="center")
 
     label_picker_metrologo = tk.Label(scrollable_frame, text="Selecciona el metrologo", font=("Arial", 12))
-    label_picker_metrologo.pack(pady=5)
+    label_picker_metrologo.pack(pady=5, anchor="center")
     options_metrologo = ["Presiona aqui", "Ingeniero Ruben Ospina", "Ingeniera Luz Alejandra Vargas"]
     selected_var_metrologo = tk.StringVar(scrollable_frame)
     selected_var_metrologo.set(options_metrologo[0])
     option_menu_metrologo = tk.OptionMenu(scrollable_frame, selected_var_metrologo, *options_metrologo, command=on_metrologo_select)
-    option_menu_metrologo.pack(pady=5)
+    option_menu_metrologo.pack(pady=5, anchor="center")
 
     start_button = tk.Button(scrollable_frame, text="Empezar a generar los certificados", command=lambda: start_generation())
-    start_button.pack(pady=10)
+    start_button.pack(pady=10, anchor="center")
 
     label_drive_folder = tk.Label(scrollable_frame, text="Escribe la carpeta para drive Ej. Puerto Boyaca 2024:")
-    label_drive_folder.pack(pady=5)
+    label_drive_folder.pack(pady=5, anchor="center")
     entry_drive_folder = tk.Entry(scrollable_frame, width=90)
-    entry_drive_folder.pack(pady=5)
+    entry_drive_folder.pack(pady=5, anchor="center")
 
     create_folders_button = tk.Button(scrollable_frame, text="Crear carpetas de cada equipo encontrado", command=lambda: create_folders())
-    create_folders_button.pack(pady=10)
+    create_folders_button.pack(pady=10, anchor="center")
 
     save_button = tk.Button(scrollable_frame, text="Crear carpeta de drive con las carpetas de cada equipo", command=lambda: search_in_directories(directorio_base))
-    save_button.pack(pady=10)
+    save_button.pack(pady=10, anchor="center")
 
     upload_button = tk.Button(scrollable_frame, text="Subir todos los equipos en su carpeta", command=lambda: upload_all_files())
-    upload_button.pack(pady=10)
+    upload_button.pack(pady=10, anchor="center")
 
     genqr_button = tk.Button(scrollable_frame, text="Generar pdf con todos los QR", command=lambda: start_qr_pdf_generation())
-    genqr_button.pack(pady=10)
+    genqr_button.pack(pady=10, anchor="center")
 
     delete_all_button = tk.Button(scrollable_frame, text="Eliminar equipos generados", command=lambda: eliminar_equipos_generados())
-    delete_all_button.pack(pady=10)
+    delete_all_button.pack(pady=10, anchor="center")
 
     output_text = tk.Text(scrollable_frame, wrap=tk.WORD, height=15, width=90)
-    output_text.pack(pady=10)
+    output_text.pack(pady=10, anchor="center")
 
     root.mainloop()
 
